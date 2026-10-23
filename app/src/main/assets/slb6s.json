@@ -1,0 +1,1826 @@
+[
+ {
+  "n": 1,
+  "t": "They Were Here Just Now",
+  "w": [
+   {
+    "e": "just now",
+    "z": "刚刚；刚才"
+   },
+   {
+    "e": "moment",
+    "z": "一会儿；片刻"
+   },
+   {
+    "e": "ago",
+    "z": "以前"
+   },
+   {
+    "e": "a moment ago",
+    "z": "刚刚"
+   },
+   {
+    "e": "lake",
+    "z": "湖"
+   },
+   {
+    "e": "stone",
+    "z": "石头"
+   },
+   {
+    "e": "ant",
+    "z": "蚂蚁"
+   },
+   {
+    "e": "carry",
+    "z": "搬；扛；提；拿"
+   },
+   {
+    "e": "leaves",
+    "z": "叶子（复数）"
+   },
+   {
+    "e": "butterfly",
+    "z": "蝴蝶"
+   },
+   {
+    "e": "find",
+    "z": "发现；找到"
+   },
+   {
+    "e": "lab",
+    "z": "实验室"
+   },
+   {
+    "e": "computer",
+    "z": "计算机；电脑"
+   },
+   {
+    "e": "computer lab",
+    "z": "计算机室"
+   },
+   {
+    "e": "yesterday",
+    "z": "昨天"
+   },
+   {
+    "e": "Mrs.",
+    "z": "太太；夫人"
+   },
+   {
+    "e": "office",
+    "z": "办公室"
+   },
+   {
+    "e": "know",
+    "z": "知道"
+   },
+   {
+    "e": "classmate",
+    "z": "同班同学"
+   },
+   {
+    "e": "leaf",
+    "z": "树叶"
+   },
+   {
+    "e": "carry food",
+    "z": "搬运食物"
+   }
+  ],
+  "s": [
+   {
+    "e": "Where were they just now?",
+    "z": "刚才它们在哪儿？"
+   },
+   {
+    "e": "They were here just now.",
+    "z": "它们刚才还在这儿。"
+   },
+   {
+    "e": "It was in its mother's arms a moment ago.",
+    "z": "刚才它还在妈妈怀里。"
+   },
+   {
+    "e": "The ants were near the stone a moment ago.",
+    "z": "刚才蚂蚁在石头旁边。"
+   },
+   {
+    "e": "Was the butterfly on the leaves?",
+    "z": "蝴蝶刚才在叶子上吗？"
+   },
+   {
+    "e": "Yes, it was. Now it is near the lake.",
+    "z": "是的。现在它在湖边。"
+   },
+   {
+    "e": "Were you in the computer lab yesterday?",
+    "z": "你昨天在计算机室吗？"
+   },
+   {
+    "e": "No, I wasn't. I was in Mrs. Li's office.",
+    "z": "不，我不在。我在李老师的办公室。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Su Nan: Come here, Wu Chen. There is a baby monkey.",
+    "z": "苏楠：过来，吴晨。这儿有一只小猴子。"
+   },
+   {
+    "e": "Wu Chen: Baby monkey? Where is it?",
+    "z": "吴晨：小猴子？它在哪儿？"
+   },
+   {
+    "e": "Su Nan: It was in its mother's arms a moment ago. Now it's in that tree.",
+    "z": "苏楠：它刚才还在妈妈怀里。现在它在那棵树上。"
+   },
+   {
+    "e": "Wu Chen: Cute!",
+    "z": "吴晨：真可爱！"
+   },
+   {
+    "e": "Wu Chen: The lake is big and clean.",
+    "z": "吴晨：这个湖又大又干净。"
+   },
+   {
+    "e": "Su Nan: Yes. There are many fish in it.",
+    "z": "苏楠：是的。湖里有很多鱼。"
+   },
+   {
+    "e": "Wu Chen: Fish? Where are they?",
+    "z": "吴晨：鱼？它们在哪儿？"
+   },
+   {
+    "e": "Su Nan: They were here just now. Look! They are over there, near the stone.",
+    "z": "苏楠：它们刚才还在这儿。看！它们在那边，石头旁边。"
+   },
+   {
+    "e": "Wu Chen: Here, here! A group of ants are carrying food near the leaves and a butterfly is on the flower. It's very beautiful.",
+    "z": "吴晨：这儿，这儿！一群蚂蚁正在树叶旁边搬食物，一只蝴蝶在花上。它非常漂亮。"
+   },
+   {
+    "e": "Su Nan: Where is the butterfly?",
+    "z": "苏楠：蝴蝶在哪儿？"
+   },
+   {
+    "e": "Wu Chen: It was here just now, but where is it now? Let's find it.",
+    "z": "吴晨：它刚才还在这儿，可是现在在哪儿呢？我们去找找吧。"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "Where is the white butterfly?",
+    "z": "那只白蝴蝶在哪儿？"
+   },
+   {
+    "e": "It was here just now. Look! It's on the flower over there.",
+    "z": "它刚才还在这儿。看！它在那边的花上。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "Li Shan: What day is it today?",
+    "z": "李珊：今天星期几？"
+   },
+   {
+    "e": "Wu Chen: Mm ... Let me see. We had a labor education class yesterday. It was Tuesday. Today is Wednesday.",
+    "z": "吴晨：嗯……让我想想。我们昨天上了劳动教育课。那天是星期二。今天是星期三。"
+   },
+   {
+    "e": "Li Shan: So, we'll have a computer class today.",
+    "z": "李珊：那么，我们今天要上计算机课。"
+   },
+   {
+    "e": "Wu Chen: Yes.",
+    "z": "吴晨：是的。"
+   },
+   {
+    "e": "Miss Li: Hi, Mrs. Yang. Where are the students now?",
+    "z": "李老师：你好，杨老师。学生们现在在哪儿？"
+   },
+   {
+    "e": "Mrs. Yang: Colin was in the library an hour ago. Liu Zhaoyang was in the teachers' office ten minutes ago, but now I don't know.",
+    "z": "杨老师：科林一小时前在图书馆。刘朝阳十分钟前在教师办公室，但现在我不知道。"
+   },
+   {
+    "e": "Miss Li: OK. I'll find them.",
+    "z": "李老师：好的。我去找他们。"
+   },
+   {
+    "e": "Miss Li: You were not in the classroom just now. Where were you?",
+    "z": "李老师：你刚才不在教室。你去哪儿了？"
+   },
+   {
+    "e": "Su Nan: I was on the playground with my classmates a moment ago. We played games there.",
+    "z": "苏楠：我刚才和同学们在操场上。我们在那儿玩游戏了。"
+   }
+  ]
+ },
+ {
+  "n": 2,
+  "t": "My Hometown",
+  "w": [
+   {
+    "e": "last",
+    "z": "最近的"
+   },
+   {
+    "e": "week",
+    "z": "星期；周"
+   },
+   {
+    "e": "away",
+    "z": "离开；相距"
+   },
+   {
+    "e": "far away",
+    "z": "遥远"
+   },
+   {
+    "e": "live",
+    "z": "居住"
+   },
+   {
+    "e": "village",
+    "z": "村庄"
+   },
+   {
+    "e": "public",
+    "z": "公开的；公共的"
+   },
+   {
+    "e": "square",
+    "z": "广场"
+   },
+   {
+    "e": "public square",
+    "z": "公共广场"
+   },
+   {
+    "e": "bridge",
+    "z": "桥"
+   },
+   {
+    "e": "hotel",
+    "z": "酒店；宾馆"
+   },
+   {
+    "e": "river",
+    "z": "河"
+   },
+   {
+    "e": "garden",
+    "z": "花园"
+   },
+   {
+    "e": "mall",
+    "z": "购物中心"
+   },
+   {
+    "e": "town",
+    "z": "城镇"
+   },
+   {
+    "e": "toilet",
+    "z": "卫生间"
+   },
+   {
+    "e": "public toilet",
+    "z": "公共卫生间"
+   },
+   {
+    "e": "poor",
+    "z": "贫穷的"
+   },
+   {
+    "e": "even",
+    "z": "甚至"
+   },
+   {
+    "e": "mice",
+    "z": "老鼠（复数）"
+   },
+   {
+    "e": "over",
+    "z": "在……上空"
+   },
+   {
+    "e": "different",
+    "z": "不同的"
+   },
+   {
+    "e": "build",
+    "z": "盖；建造"
+   },
+   {
+    "e": "open",
+    "z": "开张；开业"
+   },
+   {
+    "e": "few",
+    "z": "不多；很少"
+   },
+   {
+    "e": "a few",
+    "z": "一些；几个"
+   },
+   {
+    "e": "front",
+    "z": "前面"
+   },
+   {
+    "e": "in front of",
+    "z": "在……前面"
+   },
+   {
+    "e": "kinds of",
+    "z": "各种各样的"
+   },
+   {
+    "e": "shopping mall",
+    "z": "购物中心"
+   }
+  ],
+  "s": [
+   {
+    "e": "Were you at home yesterday afternoon?",
+    "z": "你昨天下午在家吗？"
+   },
+   {
+    "e": "Yes, I was.",
+    "z": "是的，我在。"
+   },
+   {
+    "e": "No, they weren't. They were in the village.",
+    "z": "不，他们不在。他们在村子里。"
+   },
+   {
+    "e": "There was a public square in my hometown.",
+    "z": "我的家乡以前有一个公共广场。"
+   },
+   {
+    "e": "There were a few hotels near the river.",
+    "z": "河边以前有几家宾馆。"
+   },
+   {
+    "e": "Ten years ago, my town was poor.",
+    "z": "十年前，我的小镇很穷。"
+   },
+   {
+    "e": "Now there are many kinds of shops in front of the bridge.",
+    "z": "现在桥前面有各种各样的商店。"
+   },
+   {
+    "e": "My hometown is very different now.",
+    "z": "我的家乡现在大不一样了。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Liu Zhaoyang: Were you at home yesterday afternoon?",
+    "z": "刘朝阳：你昨天下午在家吗？"
+   },
+   {
+    "e": "Li Shan: Yes, I was. I did my homework with my brother.",
+    "z": "李珊：是的，我在。我和弟弟一起做了作业。"
+   },
+   {
+    "e": "Liu Zhaoyang: Were your parents at home?",
+    "z": "刘朝阳：你爸爸妈妈在家吗？"
+   },
+   {
+    "e": "Li Shan: No, they weren't. My grandma was ill last week. They went back to my hometown to see her.",
+    "z": "李珊：不，他们不在。我奶奶上周生病了。他们回老家去看她了。"
+   },
+   {
+    "e": "Liu Zhaoyang: Is it far away?",
+    "z": "刘朝阳：远吗？"
+   },
+   {
+    "e": "Li Shan: Yes, a little far. She lives in a small village. They were back late last night.",
+    "z": "李珊：是的，有点远。她住在一个小村庄里。他们昨晚很晚才回来。"
+   },
+   {
+    "e": "Liu Zhaoyang: How is your grandma now?",
+    "z": "刘朝阳：你奶奶现在怎么样了？"
+   },
+   {
+    "e": "Li Shan: She is all right. Thank you.",
+    "z": "李珊：她没事了。谢谢你。"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "Were you at home yesterday afternoon?",
+    "z": "你昨天下午在家吗？"
+   },
+   {
+    "e": "Yes, I was.",
+    "z": "是的，我在。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "Su Nan: Look at the picture of my hometown. It's a small town in Hunan.",
+    "z": "苏楠：看我家乡的照片。它是湖南的一个小镇。"
+   },
+   {
+    "e": "Liu Zhaoyang: Wow, what a nice place!",
+    "z": "刘朝阳：哇，多美的地方啊！"
+   },
+   {
+    "e": "Su Nan: Yes, it is. But many years ago, it was a small village. The buildings were old and poor. The river was dirty. Sometimes we could even see mice.",
+    "z": "苏楠：是的。但是很多年前，它是一个小村庄。房子又旧又破。河水很脏。有时我们甚至能看到老鼠。"
+   },
+   {
+    "e": "Liu Zhaoyang: Was there a bridge over the river before?",
+    "z": "刘朝阳：以前河上有桥吗？"
+   },
+   {
+    "e": "Su Nan: No, there wasn't. But it is different now. We built a bridge ten years ago. A large hotel, some restaurants and a big shopping mall opened a few years ago.",
+    "z": "苏楠：不，没有。但现在不一样了。十年前我们建了一座桥。几年前开了一家大酒店、一些餐馆和一个大购物中心。"
+   },
+   {
+    "e": "Liu Zhaoyang: Is that a public square?",
+    "z": "刘朝阳：那是广场吗？"
+   },
+   {
+    "e": "Su Nan: Yes, it is. In front of it, there are different kinds of flowers in the garden. And the public toilet beside it is very clean.",
+    "z": "苏楠：是的。在它前面，花园里有各种各样的花。旁边的公共厕所也很干净。"
+   },
+   {
+    "e": "Liu Zhaoyang: Great! May I go and visit your hometown with you?",
+    "z": "刘朝阳：太棒了！我可以和你一起去你家乡看看吗？"
+   },
+   {
+    "e": "Su Nan: Welcome!",
+    "z": "苏楠：欢迎！"
+   }
+  ]
+ },
+ {
+  "n": 3,
+  "t": "What Did You Do Last Weekend?",
+  "w": [
+   {
+    "e": "look after",
+    "z": "照顾；照料"
+   },
+   {
+    "e": "hear",
+    "z": "听到；听见"
+   },
+   {
+    "e": "have a football match",
+    "z": "举行足球比赛"
+   },
+   {
+    "e": "borrow",
+    "z": "借"
+   },
+   {
+    "e": "borrow a book",
+    "z": "借书"
+   },
+   {
+    "e": "note",
+    "z": "笔记"
+   },
+   {
+    "e": "take notes",
+    "z": "记笔记"
+   },
+   {
+    "e": "quietly",
+    "z": "静静地；轻声地"
+   },
+   {
+    "e": "reading room",
+    "z": "阅览室"
+   },
+   {
+    "e": "share",
+    "z": "分享"
+   }
+  ],
+  "s": [
+   {
+    "e": "What did you do last weekend?",
+    "z": "你上周末做了什么？"
+   },
+   {
+    "e": "I cleaned the room and washed the clothes.",
+    "z": "我打扫了房间，洗了衣服。"
+   },
+   {
+    "e": "I looked after my little sister.",
+    "z": "我照顾了我的妹妹。"
+   },
+   {
+    "e": "Did you have a football match last Sunday?",
+    "z": "你们上周日举行足球比赛了吗？"
+   },
+   {
+    "e": "I borrowed a book from the reading room.",
+    "z": "我从阅览室借了一本书。"
+   },
+   {
+    "e": "We took notes quietly in the reading room.",
+    "z": "我们在阅览室里安静地记笔记。"
+   },
+   {
+    "e": "I'd like to share my weekend with you.",
+    "z": "我想和你分享我的周末。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Liu Zhaoyang: Hi, Li Shan! What did you do last Saturday?",
+    "z": "刘朝阳：嗨，李珊！你上周六做什么了？"
+   },
+   {
+    "e": "Li Shan: I was busy. I cleaned the rooms, washed the clothes and cooked dinner.",
+    "z": "李珊：我很忙。我打扫了房间，洗了衣服，还做了晚饭。"
+   },
+   {
+    "e": "Liu Zhaoyang: You are so helpful in the family. What did your parents do?",
+    "z": "刘朝阳：你在家里真能干。你爸爸妈妈做什么了？"
+   },
+   {
+    "e": "Li Shan: My father worked in the garden. My mother was not at home.",
+    "z": "李珊：我爸爸在花园里干活。我妈妈不在家。"
+   },
+   {
+    "e": "Liu Zhaoyang: Where did she go?",
+    "z": "刘朝阳：她去哪儿了？"
+   },
+   {
+    "e": "Li Shan: She went to the hospital to look after my grandma.",
+    "z": "李珊：她去医院照顾我奶奶了。"
+   },
+   {
+    "e": "Liu Zhaoyang: I'm sorry to hear that.",
+    "z": "刘朝阳：听到这个消息我很难过。"
+   },
+   {
+    "e": "Li Shan: It's OK. She is better now. How was your weekend?",
+    "z": "李珊：没关系。她现在好多了。你的周末过得怎么样？"
+   },
+   {
+    "e": "Liu Zhaoyang: Wonderful! I visited some friends and we had a football match together.",
+    "z": "刘朝阳：太棒了！我拜访了一些朋友，我们一起踢了一场足球赛。"
+   },
+   {
+    "e": "Li Shan: Sounds great!",
+    "z": "李珊：听起来真棒！"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "What did you do last Saturday?",
+    "z": "你上周六做什么了？"
+   },
+   {
+    "e": "I cleaned the rooms, washed the clothes and cooked dinner.",
+    "z": "我打扫了房间，洗了衣服，还做了晚饭。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "Li Shan: Where did you go yesterday afternoon, Wu Chen?",
+    "z": "李珊：吴晨，你昨天下午去哪儿了？"
+   },
+   {
+    "e": "Wu Chen: I went to the library.",
+    "z": "吴晨：我去图书馆了。"
+   },
+   {
+    "e": "Li Shan: You really like reading.",
+    "z": "李珊：你真喜欢读书。"
+   },
+   {
+    "e": "Wu Chen: Yes.",
+    "z": "吴晨：是的。"
+   },
+   {
+    "e": "Li Shan: What book did you borrow?",
+    "z": "李珊：你借了什么书？"
+   },
+   {
+    "e": "Wu Chen: A science book. I read it quietly in the reading room.",
+    "z": "吴晨：一本科学书。我在阅览室里安静地读了它。"
+   },
+   {
+    "e": "Li Shan: What's it about?",
+    "z": "李珊：它是关于什么的？"
+   },
+   {
+    "e": "Wu Chen: It is about the weather. It's interesting. I took a lot of notes.",
+    "z": "吴晨：它是关于天气的。很有趣。我记了很多笔记。"
+   },
+   {
+    "e": "Li Shan: Really? Can you share them with me?",
+    "z": "李珊：真的吗？你能和我分享吗？"
+   },
+   {
+    "e": "Wu Chen: Of course.",
+    "z": "吴晨：当然可以。"
+   }
+  ]
+ },
+ {
+  "n": 4,
+  "t": "Where Did You Go on Your Holiday?",
+  "w": [
+   {
+    "e": "book",
+    "z": "预订；预约"
+   },
+   {
+    "e": "ticket",
+    "z": "票"
+   },
+   {
+    "e": "necessary",
+    "z": "必要的；必须的"
+   },
+   {
+    "e": "beach",
+    "z": "沙滩"
+   },
+   {
+    "e": "volleyball",
+    "z": "排球"
+   },
+   {
+    "e": "play beach volleyball",
+    "z": "打沙滩排球"
+   },
+   {
+    "e": "skiing",
+    "z": "滑雪（滑水）运动"
+   },
+   {
+    "e": "go water skiing",
+    "z": "去滑水"
+   },
+   {
+    "e": "seafood",
+    "z": "海鲜"
+   },
+   {
+    "e": "shake",
+    "z": "摇动"
+   },
+   {
+    "e": "shake hands",
+    "z": "握手"
+   },
+   {
+    "e": "sea",
+    "z": "海；海洋"
+   },
+   {
+    "e": "firework",
+    "z": "烟花"
+   },
+   {
+    "e": "cartoon",
+    "z": "动画片；卡通片"
+   },
+   {
+    "e": "character",
+    "z": "人物；角色"
+   },
+   {
+    "e": "cartoon character",
+    "z": "卡通人物"
+   },
+   {
+    "e": "watch a show",
+    "z": "观看表演"
+   },
+   {
+    "e": "national",
+    "z": "国家的"
+   },
+   {
+    "e": "National Day",
+    "z": "国庆节"
+   },
+   {
+    "e": "Disneyland",
+    "z": "迪士尼乐园"
+   },
+   {
+    "e": "greet",
+    "z": "问候；打招呼"
+   },
+   {
+    "e": "excitedly",
+    "z": "兴奋地；激动地"
+   },
+   {
+    "e": "ride",
+    "z": "乘；骑"
+   },
+   {
+    "e": "roller coaster",
+    "z": "过山车"
+   },
+   {
+    "e": "exciting",
+    "z": "激动人心的"
+   },
+   {
+    "e": "book a ticket",
+    "z": "订票"
+   },
+   {
+    "e": "fireworks",
+    "z": "烟花"
+   },
+   {
+    "e": "eat seafood",
+    "z": "吃海鲜"
+   }
+  ],
+  "s": [
+   {
+    "e": "Where did you go on your holiday?",
+    "z": "你假期去了哪里？"
+   },
+   {
+    "e": "I went to Qingdao with my parents.",
+    "z": "我和爸爸妈妈去了青岛。"
+   },
+   {
+    "e": "How did you go there?",
+    "z": "你们怎么去的？"
+   },
+   {
+    "e": "We went there by train.",
+    "z": "我们坐火车去的。"
+   },
+   {
+    "e": "It is necessary to book the tickets early.",
+    "z": "提前订票是有必要的。"
+   },
+   {
+    "e": "We played beach volleyball and ate seafood.",
+    "z": "我们打了沙滩排球，吃了海鲜。"
+   },
+   {
+    "e": "We watched the fireworks on National Day.",
+    "z": "我们国庆节看了烟花。"
+   },
+   {
+    "e": "We rode the roller coaster. It was exciting!",
+    "z": "我们坐了过山车，太刺激了！"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Colin: Mom, all my friends had a good time last summer holiday. Some of them traveled far away.",
+    "z": "科林：妈妈，我所有的朋友去年暑假都玩得很开心。他们中有些人去了很远的地方旅行。"
+   },
+   {
+    "e": "Mom: Oh! Where did Li Shan go on her holiday?",
+    "z": "妈妈：哦！李珊假期去哪儿了？"
+   },
+   {
+    "e": "Colin: She went to Qingdao.",
+    "z": "科林：她去了青岛。"
+   },
+   {
+    "e": "Mom: That's a good place to spend the holiday. Who did she go with?",
+    "z": "妈妈：那是个度假的好地方。她和谁一起去的？"
+   },
+   {
+    "e": "Colin: She went with her family. It's the first time for her to travel with them.",
+    "z": "科林：她和家人一起去的。这是她第一次和家人一起旅行。"
+   },
+   {
+    "e": "Mom: How did they go there?",
+    "z": "妈妈：他们怎么去的？"
+   },
+   {
+    "e": "Colin: They went there by train. They booked the tickets and the hotel a week before.",
+    "z": "科林：他们坐火车去的。他们提前一周订了车票和酒店。"
+   },
+   {
+    "e": "Mom: That's necessary. What did they do there?",
+    "z": "妈妈：那很有必要。他们在那儿做了什么？"
+   },
+   {
+    "e": "Colin: Li Shan and her mother played beach volleyball. Her father and her brother went water skiing. They also ate some seafood together. They had a lot of fun there.",
+    "z": "科林：李珊和她妈妈打了沙滩排球。她爸爸和弟弟去滑水了。他们还一起吃了海鲜。他们在那儿玩得很开心。"
+   },
+   {
+    "e": "Mom: Sounds great!",
+    "z": "妈妈：听起来真棒！"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "What did Li Shan do on her holiday?",
+    "z": "李珊假期做了什么？"
+   },
+   {
+    "e": "She played beach volleyball.",
+    "z": "她打了沙滩排球。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "On the National Day of this year, I went to Disneyland in Shanghai with my family. It was a wonderful day!",
+    "z": "今年国庆节，我和家人去了上海迪士尼乐园。那是美好的一天！"
+   },
+   {
+    "e": "We saw many cartoon characters. They were so lovely.",
+    "z": "我们看到了很多卡通人物。他们太可爱了。"
+   },
+   {
+    "e": "My sister and I greeted them excitedly and shook hands with them.",
+    "z": "我和妹妹兴奋地和他们打招呼，还和他们握了手。"
+   },
+   {
+    "e": "My parents took photos for us.",
+    "z": "爸爸妈妈给我们拍了照片。"
+   },
+   {
+    "e": "My favorite thing was playing games. I was excited to ride the roller coaster.",
+    "z": "我最喜欢的是玩游戏。坐过山车让我很兴奋。"
+   },
+   {
+    "e": "Then we watched an interesting show.",
+    "z": "然后我们看了一场有趣的表演。"
+   },
+   {
+    "e": "In the evening, we watched beautiful fireworks, and the lights made Disneyland colorful.",
+    "z": "晚上，我们看了美丽的烟花，灯光把迪士尼乐园装点得五彩缤纷。"
+   },
+   {
+    "e": "It was an exciting trip. We all had a very nice day at Disneyland.",
+    "z": "那是一次激动人心的旅行。我们在迪士尼乐园都度过了非常美好的一天。"
+   }
+  ]
+ },
+ {
+  "n": 5,
+  "t": "A Sports Meet",
+  "w": [
+   {
+    "e": "sports meet",
+    "z": "运动会"
+   },
+   {
+    "e": "take part in",
+    "z": "参加；参与"
+   },
+   {
+    "e": "meter",
+    "z": "米"
+   },
+   {
+    "e": "race",
+    "z": "比赛"
+   },
+   {
+    "e": "100-meter race",
+    "z": "100米赛跑"
+   },
+   {
+    "e": "long jump",
+    "z": "跳远"
+   },
+   {
+    "e": "try one's best",
+    "z": "尽最大的努力"
+   },
+   {
+    "e": "anyway",
+    "z": "无论如何"
+   },
+   {
+    "e": "will",
+    "z": "意愿；心愿"
+   },
+   {
+    "e": "believe",
+    "z": "相信"
+   },
+   {
+    "e": "discus",
+    "z": "铁饼"
+   },
+   {
+    "e": "throwing",
+    "z": "投掷运动"
+   },
+   {
+    "e": "discus throwing",
+    "z": "投掷铁饼"
+   },
+   {
+    "e": "rope",
+    "z": "绳"
+   },
+   {
+    "e": "jump rope",
+    "z": "跳绳"
+   },
+   {
+    "e": "high jump",
+    "z": "跳高"
+   },
+   {
+    "e": "newspaper",
+    "z": "报纸"
+   },
+   {
+    "e": "and so on",
+    "z": "等等"
+   },
+   {
+    "e": "fall down",
+    "z": "跌倒；摔倒"
+   },
+   {
+    "e": "on the way",
+    "z": "在路上"
+   },
+   {
+    "e": "hurt",
+    "z": "受伤"
+   },
+   {
+    "e": "finally",
+    "z": "最终；最后"
+   },
+   {
+    "e": "lose",
+    "z": "输掉"
+   }
+  ],
+  "s": [
+   {
+    "e": "What sport did you take part in?",
+    "z": "你参加了什么运动项目？"
+   },
+   {
+    "e": "I took part in the 100-meter race.",
+    "z": "我参加了100米赛跑。"
+   },
+   {
+    "e": "I took part in the long jump.",
+    "z": "我参加了跳远。"
+   },
+   {
+    "e": "Did you win?",
+    "z": "你赢了吗？"
+   },
+   {
+    "e": "Yes, I did. No, I didn't.",
+    "z": "是的，我赢了。/ 不，我没赢。"
+   },
+   {
+    "e": "He fell down on the way, but he tried his best.",
+    "z": "他在途中摔倒了，但他尽了最大努力。"
+   },
+   {
+    "e": "I believe you can do it!",
+    "z": "我相信你能做到！"
+   },
+   {
+    "e": "Finally, our class won the high jump.",
+    "z": "最后，我们班赢得了跳高比赛。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Amy: Hi, Liu Zhaoyang. What did you do yesterday?",
+    "z": "埃米：嗨，刘朝阳。你昨天做什么了？"
+   },
+   {
+    "e": "Liu Zhaoyang: We had a school sports meet yesterday.",
+    "z": "刘朝阳：我们昨天开了学校运动会。"
+   },
+   {
+    "e": "Amy: Wonderful! What sport did you take part in?",
+    "z": "埃米：太棒了！你参加了什么项目？"
+   },
+   {
+    "e": "Liu Zhaoyang: I took part in the boys' 100-meter race and the long jump.",
+    "z": "刘朝阳：我参加了男子100米赛跑和跳远。"
+   },
+   {
+    "e": "Amy: Did you win?",
+    "z": "埃米：你赢了吗？"
+   },
+   {
+    "e": "Liu Zhaoyang: Yes, I did. I was the first in the 100-meter race.",
+    "z": "刘朝阳：是的，我赢了。我在100米赛跑中得了第一。"
+   },
+   {
+    "e": "Amy: Wow, you are great! How about the long jump?",
+    "z": "埃米：哇，你真棒！跳远呢？"
+   },
+   {
+    "e": "Liu Zhaoyang: I didn't win, but I tried my best.",
+    "z": "刘朝阳：我没赢，但我尽力了。"
+   },
+   {
+    "e": "Amy: Anyway, you did well.",
+    "z": "埃米：不管怎样，你表现得很好。"
+   },
+   {
+    "e": "Liu Zhaoyang: Thank you.",
+    "z": "刘朝阳：谢谢你。"
+   },
+   {
+    "e": "Amy: Where there is a will there is a way. I believe you will do better next time.",
+    "z": "埃米：有志者事竟成。我相信你下次会做得更好。"
+   },
+   {
+    "e": "Liu Zhaoyang: You are right. I will!",
+    "z": "刘朝阳：你说得对。我会的！"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "What sport did you take part in?",
+    "z": "你参加了什么项目？"
+   },
+   {
+    "e": "I took part in the boys' 100-meter race and the long jump.",
+    "z": "我参加了男子100米赛跑和跳远。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "Colin is writing about the sports meet for the school newspaper.",
+    "z": "科林正在为校报写一篇关于运动会的文章。"
+   },
+   {
+    "e": "The Sports Meet, by Colin Ford",
+    "z": "《运动会》，作者：科林·福特"
+   },
+   {
+    "e": "The sports meet was great this year!",
+    "z": "今年的运动会很精彩！"
+   },
+   {
+    "e": "There were different sports like running, long jump, high jump, discus throwing and so on.",
+    "z": "有各种各样的项目，比如赛跑、跳远、跳高、掷铁饼等等。"
+   },
+   {
+    "e": "Our class did very well in the sports meet.",
+    "z": "我们班在运动会上表现得非常好。"
+   },
+   {
+    "e": "I took part in the boys' 100-meter race.",
+    "z": "我参加了男子100米赛跑。"
+   },
+   {
+    "e": "I ran very fast, but I fell down on the way.",
+    "z": "我跑得很快，但在途中摔倒了。"
+   },
+   {
+    "e": "I hurt my left leg. Finally, I lost it.",
+    "z": "我伤了左腿。最后，我输了比赛。"
+   },
+   {
+    "e": "I felt very sad, but my classmates said, \"Colin, don't be sad. It's important to enjoy the match.\"",
+    "z": "我很难过，但同学们说：“科林，别难过。享受比赛才是最重要的。”"
+   },
+   {
+    "e": "They were right. And I felt better.",
+    "z": "他们说得对。我感觉好多了。"
+   },
+   {
+    "e": "We all had lots of fun at the school sports meet.",
+    "z": "我们在学校运动会上都玩得很开心。"
+   }
+  ]
+ },
+ {
+  "n": 6,
+  "t": "We Had a Good Time",
+  "w": [
+   {
+    "e": "sale",
+    "z": "出售；销售"
+   },
+   {
+    "e": "school sale",
+    "z": "校园义卖"
+   },
+   {
+    "e": "bring",
+    "z": "带来"
+   },
+   {
+    "e": "sell",
+    "z": "卖；出售"
+   },
+   {
+    "e": "paper",
+    "z": "纸"
+   },
+   {
+    "e": "magazine",
+    "z": "杂志"
+   },
+   {
+    "e": "notebook",
+    "z": "笔记本"
+   },
+   {
+    "e": "word",
+    "z": "字；词"
+   },
+   {
+    "e": "Hope School",
+    "z": "希望小学"
+   },
+   {
+    "e": "laugh",
+    "z": "笑；大笑"
+   },
+   {
+    "e": "popcorn",
+    "z": "爆米花"
+   },
+   {
+    "e": "funny",
+    "z": "搞笑的；滑稽的"
+   },
+   {
+    "e": "move",
+    "z": "使感动"
+   },
+   {
+    "e": "kindness",
+    "z": "善良；仁慈"
+   },
+   {
+    "e": "bravery",
+    "z": "勇气；勇敢"
+   }
+  ],
+  "s": [
+   {
+    "e": "Did you take part in the school sale?",
+    "z": "你参加校园义卖了吗？"
+   },
+   {
+    "e": "What did you bring to the sale?",
+    "z": "你带了什么去义卖？"
+   },
+   {
+    "e": "I brought some paper and magazines.",
+    "z": "我带了一些纸和杂志。"
+   },
+   {
+    "e": "What did you sell?",
+    "z": "你卖了什么？"
+   },
+   {
+    "e": "I sold a notebook and some popcorn.",
+    "z": "我卖了一个笔记本和一些爆米花。"
+   },
+   {
+    "e": "We gave the money to the Hope School.",
+    "z": "我们把钱捐给了希望小学。"
+   },
+   {
+    "e": "We had a good time.",
+    "z": "我们玩得很开心。"
+   },
+   {
+    "e": "The funny show made us laugh.",
+    "z": "有趣的表演让我们哈哈大笑。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Li Shan: Liu Zhaoyang, did you take part in the school sale yesterday morning?",
+    "z": "李珊：刘朝阳，你昨天上午参加学校义卖了吗？"
+   },
+   {
+    "e": "Liu Zhaoyang: Yes, I did. I brought many things there.",
+    "z": "刘朝阳：是的，我参加了。我带了很多东西去。"
+   },
+   {
+    "e": "Li Shan: What did you sell?",
+    "z": "李珊：你卖了什么？"
+   },
+   {
+    "e": "Liu Zhaoyang: I sold some color paper, magazines, a robot, a pencil box ... It was really interesting. I had a good time.",
+    "z": "刘朝阳：我卖了一些彩纸、杂志、一个机器人、一个铅笔盒……真的很有趣。我玩得很开心。"
+   },
+   {
+    "e": "Li Shan: Great! Did you buy anything?",
+    "z": "李珊：太好了！你买东西了吗？"
+   },
+   {
+    "e": "Liu Zhaoyang: Yes, I did. I bought a notebook. I need it for writing new words. What did you sell?",
+    "z": "刘朝阳：是的，我买了。我买了一个笔记本。我需要用它写生词。你卖了什么？"
+   },
+   {
+    "e": "Li Shan: I sold some toy cars, dolls and story books. I was so glad.",
+    "z": "李珊：我卖了一些玩具车、玩偶和故事书。我非常高兴。"
+   },
+   {
+    "e": "Liu Zhaoyang: That's so cool. What shall we do with the money?",
+    "z": "刘朝阳：太酷了。我们用这些钱做什么呢？"
+   },
+   {
+    "e": "Li Shan: Let's give it to the Hope School.",
+    "z": "李珊：我们把它捐给希望小学吧。"
+   },
+   {
+    "e": "Liu Zhaoyang: Good idea!",
+    "z": "刘朝阳：好主意！"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "Did you take part in the school sale yesterday morning?",
+    "z": "你昨天上午参加学校义卖了吗？"
+   },
+   {
+    "e": "Yes, I did. I sold some color paper, magazines ...",
+    "z": "是的，我参加了。我卖了一些彩纸、杂志……"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "January 1st, Sunday, Sunny",
+    "z": "1月1日，星期日，晴"
+   },
+   {
+    "e": "This morning my father said, \"We're free today. Let's see a film.\"",
+    "z": "今天早上爸爸说：“我们今天有空。我们去看电影吧。”"
+   },
+   {
+    "e": "My little sister and I jumped excitedly.",
+    "z": "我和妹妹兴奋地跳了起来。"
+   },
+   {
+    "e": "Then we went to the cinema together.",
+    "z": "然后我们一起去了电影院。"
+   },
+   {
+    "e": "We saw many people standing in line.",
+    "z": "我们看到很多人在排队。"
+   },
+   {
+    "e": "We waited in line and bought the tickets.",
+    "z": "我们排队买了票。"
+   },
+   {
+    "e": "My father also bought us some popcorn and orange juice.",
+    "z": "爸爸还给我们买了一些爆米花和橙汁。"
+   },
+   {
+    "e": "The film began at ten o'clock. It was very interesting.",
+    "z": "电影十点开始。它非常有趣。"
+   },
+   {
+    "e": "The boy was bright and funny in the story. He made us laugh a lot.",
+    "z": "故事里的男孩聪明又有趣。他让我们笑个不停。"
+   },
+   {
+    "e": "We were moved by his kindness and bravery.",
+    "z": "我们被他的善良和勇敢打动了。"
+   },
+   {
+    "e": "The film lasted about an hour and a half.",
+    "z": "电影大约放了一个半小时。"
+   },
+   {
+    "e": "We enjoyed it very much and had a very good time today.",
+    "z": "我们非常喜欢这部电影，今天过得非常开心。"
+   }
+  ]
+ },
+ {
+  "n": 7,
+  "t": "We'd Like a Plate of Beef",
+  "w": [
+   {
+    "e": "plate",
+    "z": "盘；碟"
+   },
+   {
+    "e": "a plate of beef",
+    "z": "一盘牛肉"
+   },
+   {
+    "e": "menu",
+    "z": "菜单"
+   },
+   {
+    "e": "piece",
+    "z": "片；块；段"
+   },
+   {
+    "e": "a piece of pizza",
+    "z": "一块披萨"
+   },
+   {
+    "e": "bowl",
+    "z": "碗"
+   },
+   {
+    "e": "porridge",
+    "z": "粥"
+   },
+   {
+    "e": "a bowl of porridge",
+    "z": "一碗粥"
+   },
+   {
+    "e": "something",
+    "z": "某物；某事"
+   },
+   {
+    "e": "bottle",
+    "z": "瓶子"
+   },
+   {
+    "e": "a bottle of water",
+    "z": "一瓶水"
+   },
+   {
+    "e": "glass",
+    "z": "玻璃杯"
+   },
+   {
+    "e": "a glass of juice",
+    "z": "一杯果汁"
+   },
+   {
+    "e": "ice",
+    "z": "冰"
+   },
+   {
+    "e": "cup",
+    "z": "杯子"
+   },
+   {
+    "e": "a cup of tea",
+    "z": "一杯茶"
+   },
+   {
+    "e": "go shopping",
+    "z": "去购物"
+   },
+   {
+    "e": "smile",
+    "z": "微笑"
+   },
+   {
+    "e": "forget",
+    "z": "忘记"
+   },
+   {
+    "e": "basket",
+    "z": "篮子；筐子"
+   }
+  ],
+  "s": [
+   {
+    "e": "Would you like something to drink?",
+    "z": "你想喝点什么吗？"
+   },
+   {
+    "e": "Yes, please. A bottle of water.",
+    "z": "好的，谢谢。来一瓶水。"
+   },
+   {
+    "e": "What kind of drinks would you like, juice or water?",
+    "z": "你想喝哪种饮料，果汁还是水？"
+   },
+   {
+    "e": "I'd like a glass of juice.",
+    "z": "我想要一杯果汁。"
+   },
+   {
+    "e": "We'd like a plate of beef.",
+    "z": "我们想要一盘牛肉。"
+   },
+   {
+    "e": "Can I have a bowl of porridge, please?",
+    "z": "请给我一碗粥好吗？"
+   },
+   {
+    "e": "I'd like a piece of pizza and a cup of tea.",
+    "z": "我想要一块披萨和一杯茶。"
+   },
+   {
+    "e": "Here is the menu.",
+    "z": "这是菜单。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Waitress: Welcome! Here's the menu. What would you like?",
+    "z": "服务员：欢迎光临！这是菜单。您想要点什么？"
+   },
+   {
+    "e": "Mom: I'd like a piece of pizza and a plate of beef.",
+    "z": "妈妈：我想要一块比萨和一盘牛肉。"
+   },
+   {
+    "e": "Li Shan: Some vegetables and a bowl of porridge, please. Oh, the cake looks nice! Can I get a piece of cake, Mom?",
+    "z": "李珊：请给我一些蔬菜和一碗粥。哦，这个蛋糕看起来真好！妈妈，我能要一块蛋糕吗？"
+   },
+   {
+    "e": "Mom: Of course.",
+    "z": "妈妈：当然可以。"
+   },
+   {
+    "e": "Waitress: Would you like something to drink?",
+    "z": "服务员：您想喝点什么吗？"
+   },
+   {
+    "e": "Mom: Yes, please.",
+    "z": "妈妈：好的。"
+   },
+   {
+    "e": "Waitress: What kind of drinks would you like, juice or water?",
+    "z": "服务员：您想要什么饮料，果汁还是水？"
+   },
+   {
+    "e": "Mom: A bottle of water and a glass of juice.",
+    "z": "妈妈：一瓶水和一杯果汁。"
+   },
+   {
+    "e": "Waitress: Would you like some ice in your drink?",
+    "z": "服务员：您的饮料要加冰吗？"
+   },
+   {
+    "e": "Mom: No, thanks.",
+    "z": "妈妈：不用，谢谢。"
+   },
+   {
+    "e": "Waitress: OK. Wait a moment, please.",
+    "z": "服务员：好的。请稍等。"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "What would you like?",
+    "z": "你想要什么？"
+   },
+   {
+    "e": "I'd like a piece of pizza.",
+    "z": "我想要一块比萨。"
+   },
+   {
+    "e": "Would you like something to drink?",
+    "z": "你想喝点什么吗？"
+   },
+   {
+    "e": "Yes. I'd like a glass of juice.",
+    "z": "是的。我想要一杯果汁。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "It was Saturday afternoon. My parents would like to go shopping, so we went to the supermarket with them.",
+    "z": "那是星期六下午。爸爸妈妈想去购物，所以我们和他们一起去了超市。"
+   },
+   {
+    "e": "The vegetables looked fresh.",
+    "z": "蔬菜看起来很新鲜。"
+   },
+   {
+    "e": "\"How about making vegetable salad this evening?\" Dad asked.",
+    "z": "“今晚做蔬菜沙拉怎么样？”爸爸问。"
+   },
+   {
+    "e": "\"OK!\" Mom said happily.",
+    "z": "“好啊！”妈妈高兴地说。"
+   },
+   {
+    "e": "We bought some cucumbers, tomatoes and cabbages.",
+    "z": "我们买了一些黄瓜、西红柿和卷心菜。"
+   },
+   {
+    "e": "\"I'd like some beef, Mom,\" I said. Mom smiled and took some.",
+    "z": "“妈妈，我想要一些牛肉。”我说。妈妈笑着拿了一些。"
+   },
+   {
+    "e": "\"Don't forget to buy tea. My grandpa would like a cup of tea every morning,\" my sister said.",
+    "z": "“别忘了买茶叶。爷爷每天早上都想喝一杯茶。”妹妹说。"
+   },
+   {
+    "e": "\"Haha. Don't worry. I'll put it in the basket,\" Dad said.",
+    "z": "“哈哈。别担心。我会把它放进购物篮里的。”爸爸说。"
+   },
+   {
+    "e": "We bought our favorite things that day. All of us felt very happy.",
+    "z": "那天我们买了自己最喜欢的东西。我们都感到非常开心。"
+   }
+  ]
+ },
+ {
+  "n": 8,
+  "t": "New Year Is Coming",
+  "w": [
+   {
+    "e": "New Year",
+    "z": "新年"
+   },
+   {
+    "e": "date",
+    "z": "日期"
+   },
+   {
+    "e": "Christmas Day",
+    "z": "圣诞节"
+   },
+   {
+    "e": "New Year's Day",
+    "z": "元旦"
+   },
+   {
+    "e": "learn from",
+    "z": "向……学习"
+   },
+   {
+    "e": "join",
+    "z": "加入"
+   },
+   {
+    "e": "Spring Festival",
+    "z": "春节"
+   },
+   {
+    "e": "relative",
+    "z": "亲戚"
+   },
+   {
+    "e": "visit relatives and friends",
+    "z": "走亲访友"
+   },
+   {
+    "e": "couplet",
+    "z": "对联"
+   },
+   {
+    "e": "put up couplets",
+    "z": "贴对联"
+   },
+   {
+    "e": "hang",
+    "z": "悬挂"
+   },
+   {
+    "e": "lantern",
+    "z": "灯笼"
+   },
+   {
+    "e": "hang lanterns",
+    "z": "挂灯笼"
+   },
+   {
+    "e": "make paper-cuts",
+    "z": "剪纸"
+   },
+   {
+    "e": "exchange",
+    "z": "交换；互换"
+   },
+   {
+    "e": "greeting",
+    "z": "问候"
+   },
+   {
+    "e": "exchange greetings",
+    "z": "相互问好"
+   },
+   {
+    "e": "do house cleaning",
+    "z": "打扫房间"
+   },
+   {
+    "e": "eve",
+    "z": "前夕；前夜"
+   }
+  ],
+  "s": [
+   {
+    "e": "New Year is coming.",
+    "z": "新年就要到了。"
+   },
+   {
+    "e": "What is the date today?",
+    "z": "今天几月几号？"
+   },
+   {
+    "e": "What did you do this year?",
+    "z": "你今年做了什么？"
+   },
+   {
+    "e": "I read some books about science.",
+    "z": "我读了一些科学方面的书。"
+   },
+   {
+    "e": "Do you have a plan for the new year?",
+    "z": "你有新年计划吗？"
+   },
+   {
+    "e": "I wish to join our ping-pong team.",
+    "z": "我希望加入我们的乒乓球队。"
+   },
+   {
+    "e": "At the Spring Festival, we put up couplets and hang lanterns.",
+    "z": "春节时，我们贴对联、挂灯笼。"
+   },
+   {
+    "e": "We visit relatives and friends and exchange greetings.",
+    "z": "我们走亲访友，互相问候。"
+   }
+  ],
+  "xt": "Part A & Part B（课本原文）",
+  "x": [
+   {
+    "e": "Part A Let's talk",
+    "z": "A 部分 · 对话"
+   },
+   {
+    "e": "Li Shan: What's the date today?",
+    "z": "李珊：今天几号？"
+   },
+   {
+    "e": "Max: Let me see. Christmas Day was a week ago. It's December 31st, the last day of this year.",
+    "z": "马克斯：让我想想。圣诞节是一周前。今天是12月31日，今年的最后一天。"
+   },
+   {
+    "e": "Li Shan: So tomorrow is January 1st, New Year's Day.",
+    "z": "李珊：那明天就是1月1日，元旦。"
+   },
+   {
+    "e": "Max: How time flies!",
+    "z": "马克斯：时间过得真快啊！"
+   },
+   {
+    "e": "Li Shan: What did you do this year?",
+    "z": "李珊：你今年做了什么？"
+   },
+   {
+    "e": "Max: I read some books about science. I learned a lot from the books. What did you do?",
+    "z": "马克斯：我读了一些科学方面的书。我从书中学到了很多。你做了什么？"
+   },
+   {
+    "e": "Li Shan: I learned to take photos from my uncle. I wish to take some beautiful photos in the new year.",
+    "z": "李珊：我跟叔叔学了拍照。我希望在新的一年里拍一些漂亮的照片。"
+   },
+   {
+    "e": "Max: Do you have a plan for the new year?",
+    "z": "马克斯：你有新年计划吗？"
+   },
+   {
+    "e": "Li Shan: Yes, I do. I wish to join our ping-pong team. I'd like to learn to play well.",
+    "z": "李珊：是的，我有。我希望加入我们的乒乓球队。我想学会打好乒乓球。"
+   },
+   {
+    "e": "Max: I wish you good luck.",
+    "z": "马克斯：祝你好运。"
+   },
+   {
+    "e": "Part A Let's learn",
+    "z": "A 部分 · 学一学"
+   },
+   {
+    "e": "What do people do on the Spring Festival?",
+    "z": "人们在春节做什么？"
+   },
+   {
+    "e": "They put up the Spring Festival couplets.",
+    "z": "他们贴春联。"
+   },
+   {
+    "e": "Part B Let's read",
+    "z": "B 部分 · 阅读"
+   },
+   {
+    "e": "To: kitty@friend.cn. Subject: The Spring Festival.",
+    "z": "收件人：kitty@friend.cn。主题：春节。"
+   },
+   {
+    "e": "Dear Kitty,",
+    "z": "亲爱的凯蒂："
+   },
+   {
+    "e": "The Spring Festival is coming. It's very important for Chinese people. We like it very much.",
+    "z": "春节快到了。它对中国人来说非常重要。我们非常喜欢它。"
+   },
+   {
+    "e": "Before the Spring Festival, people do house cleaning, go shopping and make paper-cuts for the festival.",
+    "z": "春节前，人们打扫房子、购物，还为节日剪纸。"
+   },
+   {
+    "e": "On the eve of the festival, people put up the Spring Festival couplets and hang red lanterns.",
+    "z": "在除夕，人们贴春联、挂红灯笼。"
+   },
+   {
+    "e": "They have a big family dinner together.",
+    "z": "他们一起吃一顿丰盛的团圆饭。"
+   },
+   {
+    "e": "Then they watch fireworks to welcome the Chinese New Year.",
+    "z": "然后他们看烟花，迎接中国新年。"
+   },
+   {
+    "e": "That's really a happy moment of every family.",
+    "z": "那真是每个家庭的幸福时刻。"
+   },
+   {
+    "e": "During the Spring Festival, people wear new clothes and visit their relatives and friends.",
+    "z": "春节期间，人们穿新衣服，走亲访友。"
+   },
+   {
+    "e": "They exchange greetings and best wishes in the new year.",
+    "z": "他们在新年里互致问候和美好祝愿。"
+   },
+   {
+    "e": "Does this sound wonderful? Would you like to come to my home and enjoy the festival together with us? Please write to me.",
+    "z": "听起来很棒吧？你愿意来我家和我们一起过节吗？请给我回信。"
+   },
+   {
+    "e": "Yours, Liu Zhaoyang",
+    "z": "你的朋友，刘朝阳"
+   }
+  ]
+ }
+]
