@@ -1,76 +1,212 @@
-#1 Where Are the Animals?
-Colin: Look! There is a baby panda in the tree.|科林：看！树上有一只熊猫宝宝。
-Alice: Where is its mother?|爱丽丝：它的妈妈在哪儿？
-Colin: She was here just now. Now she is near the lake.|科林：它刚才还在这儿，现在在湖边。
-Alice: Look at the ants! They were near the stone a moment ago.|爱丽丝：看那些蚂蚁！刚才它们还在石头旁边。
-Colin: Now they are carrying some leaves.|科林：现在它们正在搬一些叶子。
-Alice: Where are the butterflies?|爱丽丝：蝴蝶在哪儿呢？
-Colin: They were on the flowers just now. Now they are over the water.|科林：它们刚才在花上，现在飞到水面上了。
-Alice: Nature is so beautiful!|爱丽丝：大自然真美！
-#2 My Hometown
-Li Shan: Were you at home yesterday afternoon, Colin?|李山：科林，你昨天下午在家吗？
-Colin: No, I wasn't. I was in my grandpa's village.|科林：不，我不在家。我在爷爷的村子里。
-Li Shan: What was the village like?|李山：那个村子以前是什么样的？
-Colin: Ten years ago, it was poor. There were only a few small houses.|科林：十年前它很穷，只有几间小房子。
-Colin: There was no public square and no public toilet.|科林：那里没有公共广场，也没有公共卫生间。
-Li Shan: What is it like now?|李山：现在呢？
-Colin: Now there is a new bridge over the river.|科林：现在河上有一座新桥。
-Colin: There are hotels, gardens and a big mall.|科林：还有宾馆、花园和一个大商场。
-Li Shan: Your hometown is very different now!|李山：你的家乡现在大不一样了！
-#3 My Weekend
-Alice: Hi, Wu Chen. What did you do last weekend?|爱丽丝：嗨，吴晨。你上周末做了什么？
-Wu Chen: On Saturday, I cleaned my room and washed my clothes.|吴晨：周六，我打扫了房间，洗了衣服。
-Wu Chen: I also looked after my little sister.|吴晨：我还照顾了我的妹妹。
-Alice: What did you do on Sunday?|爱丽丝：周日你做了什么？
-Wu Chen: I went to the library and borrowed a book.|吴晨：我去图书馆借了一本书。
-Wu Chen: I read it quietly in the reading room and took notes.|吴晨：我在阅览室安静地读书，还做了笔记。
-Alice: Did you have a football match?|爱丽丝：你们举行足球比赛了吗？
-Wu Chen: Yes, we did. We had a great time.|吴晨：是的，我们玩得很开心。
-#4 My Holiday
-Kitty: Where did you go on your holiday, Li Shan?|凯蒂：李山，你假期去了哪里？
-Li Shan: I went to Qingdao with my parents.|李山：我和爸爸妈妈去了青岛。
-Kitty: How did you go there?|凯蒂：你们怎么去的？
-Li Shan: We went there by train. We booked the tickets early.|李山：我们坐火车去的，提前订了票。
-Kitty: What did you do there?|凯蒂：你们在那儿做了什么？
-Li Shan: We played beach volleyball and swam in the sea.|李山：我们打了沙滩排球，还在海里游泳。
-Li Shan: We ate a lot of seafood. It was delicious!|李山：我们吃了很多海鲜，太好吃了！
-Kitty: On National Day, I went to Shanghai Disneyland.|凯蒂：国庆节我去了上海迪士尼乐园。
-Kitty: I rode the roller coaster and shook hands with cartoon characters.|凯蒂：我坐了过山车，还和卡通人物握了手。
-#5 A Sports Meet
-Liu Zhaoyang: Our school had a sports meet last Friday.|刘朝阳：上周五我们学校开了运动会。
-Alice: What sport did you take part in?|爱丽丝：你参加了什么项目？
-Liu Zhaoyang: I took part in the 100-meter race.|刘朝阳：我参加了100米赛跑。
-Alice: Did you win?|爱丽丝：你赢了吗？
-Liu Zhaoyang: No, I didn't. I fell down on the way.|刘朝阳：没有，我在途中摔倒了。
-Liu Zhaoyang: But I got up and tried my best.|刘朝阳：但我站起来，尽了最大努力。
-Alice: Good for you! I took part in the long jump.|爱丽丝：好样的！我参加了跳远。
-Alice: Finally, our class won the high jump and the jump rope.|爱丽丝：最后，我们班赢了跳高和跳绳。
-#6 The School Sale
-Colin: Did you take part in the school sale yesterday?|科林：你昨天参加校园义卖了吗？
-Amy: Yes, I did. I brought some magazines and notebooks.|艾米：参加了。我带了一些杂志和笔记本。
-Colin: What did you sell?|科林：你卖了什么？
-Amy: I sold all of them! I also sold some popcorn.|艾米：全卖完了！我还卖了一些爆米花。
-Colin: What did you do with the money?|科林：你们用这些钱做什么了？
-Amy: We gave it to a Hope School.|艾米：我们把钱捐给了一所希望小学。
-Colin: Then we watched a funny show and laughed a lot.|科林：然后我们看了一场有趣的表演，笑个不停。
-Amy: We had a good time!|艾米：我们玩得很开心！
-#7 At the Restaurant
-Waiter: Good evening! Here is the menu.|服务员：晚上好！这是菜单。
-Dad: Thank you. We'd like a plate of beef and a bowl of rice.|爸爸：谢谢。我们要一盘牛肉和一碗米饭。
-Waiter: Would you like something to drink?|服务员：要喝点什么吗？
-Dad: Yes, please. A cup of tea for me.|爸爸：好的，我要一杯茶。
-Waiter: What would you like, juice or water?|服务员：你想要果汁还是水？
-Kitty: I'd like a glass of juice with ice, please.|凯蒂：请给我一杯加冰的果汁。
-Kitty: Can I have a piece of pizza too?|凯蒂：我还能要一块披萨吗？
-Waiter: Sure. Anything else?|服务员：当然。还要别的吗？
-Dad: No, thanks. That's all.|爸爸：不用了，谢谢。就这些。
-#8 New Year Is Coming
-Alice: New Year is coming! What's the date today?|爱丽丝：新年要到了！今天几号？
-Li Shan: It's December 30th.|李山：今天是12月30日。
-Alice: What did you do this year?|爱丽丝：你今年做了什么？
-Li Shan: I read some books about science and learned to swim.|李山：我读了一些科学书，还学会了游泳。
-Alice: Do you have a plan for the new year?|爱丽丝：你有新年计划吗？
-Li Shan: Yes, I do. I wish to join our ping-pong team.|李山：有。我希望加入我们的乒乓球队。
-Li Shan: At the Spring Festival, we put up couplets and hang lanterns.|李山：春节时，我们贴对联、挂灯笼。
-Li Shan: We visit relatives and friends and exchange greetings.|李山：我们走亲访友，互相问候。
-Alice: Happy New Year!|爱丽丝：新年快乐！
+#1 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Su Nan: Come here, Wu Chen. There is a baby monkey.|苏楠：过来，吴晨。这儿有一只小猴子。
+Wu Chen: Baby monkey? Where is it?|吴晨：小猴子？它在哪儿？
+Su Nan: It was in its mother's arms a moment ago. Now it's in that tree.|苏楠：它刚才还在妈妈怀里。现在它在那棵树上。
+Wu Chen: Cute!|吴晨：真可爱！
+Wu Chen: The lake is big and clean.|吴晨：这个湖又大又干净。
+Su Nan: Yes. There are many fish in it.|苏楠：是的。湖里有很多鱼。
+Wu Chen: Fish? Where are they?|吴晨：鱼？它们在哪儿？
+Su Nan: They were here just now. Look! They are over there, near the stone.|苏楠：它们刚才还在这儿。看！它们在那边，石头旁边。
+Wu Chen: Here, here! A group of ants are carrying food near the leaves and a butterfly is on the flower. It's very beautiful.|吴晨：这儿，这儿！一群蚂蚁正在树叶旁边搬食物，一只蝴蝶在花上。它非常漂亮。
+Su Nan: Where is the butterfly?|苏楠：蝴蝶在哪儿？
+Wu Chen: It was here just now, but where is it now? Let's find it.|吴晨：它刚才还在这儿，可是现在在哪儿呢？我们去找找吧。
+Part A Let's learn|A 部分 · 学一学
+Where is the white butterfly?|那只白蝴蝶在哪儿？
+It was here just now. Look! It's on the flower over there.|它刚才还在这儿。看！它在那边的花上。
+Part B Let's read|B 部分 · 阅读
+Li Shan: What day is it today?|李珊：今天星期几？
+Wu Chen: Mm ... Let me see. We had a labor education class yesterday. It was Tuesday. Today is Wednesday.|吴晨：嗯……让我想想。我们昨天上了劳动教育课。那天是星期二。今天是星期三。
+Li Shan: So, we'll have a computer class today.|李珊：那么，我们今天要上计算机课。
+Wu Chen: Yes.|吴晨：是的。
+Miss Li: Hi, Mrs. Yang. Where are the students now?|李老师：你好，杨老师。学生们现在在哪儿？
+Mrs. Yang: Colin was in the library an hour ago. Liu Zhaoyang was in the teachers' office ten minutes ago, but now I don't know.|杨老师：科林一小时前在图书馆。刘朝阳十分钟前在教师办公室，但现在我不知道。
+Miss Li: OK. I'll find them.|李老师：好的。我去找他们。
+Miss Li: You were not in the classroom just now. Where were you?|李老师：你刚才不在教室。你去哪儿了？
+Su Nan: I was on the playground with my classmates a moment ago. We played games there.|苏楠：我刚才和同学们在操场上。我们在那儿玩游戏了。
+#2 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Liu Zhaoyang: Were you at home yesterday afternoon?|刘朝阳：你昨天下午在家吗？
+Li Shan: Yes, I was. I did my homework with my brother.|李珊：是的，我在。我和弟弟一起做了作业。
+Liu Zhaoyang: Were your parents at home?|刘朝阳：你爸爸妈妈在家吗？
+Li Shan: No, they weren't. My grandma was ill last week. They went back to my hometown to see her.|李珊：不，他们不在。我奶奶上周生病了。他们回老家去看她了。
+Liu Zhaoyang: Is it far away?|刘朝阳：远吗？
+Li Shan: Yes, a little far. She lives in a small village. They were back late last night.|李珊：是的，有点远。她住在一个小村庄里。他们昨晚很晚才回来。
+Liu Zhaoyang: How is your grandma now?|刘朝阳：你奶奶现在怎么样了？
+Li Shan: She is all right. Thank you.|李珊：她没事了。谢谢你。
+Part A Let's learn|A 部分 · 学一学
+Were you at home yesterday afternoon?|你昨天下午在家吗？
+Yes, I was.|是的，我在。
+Part B Let's read|B 部分 · 阅读
+Su Nan: Look at the picture of my hometown. It's a small town in Hunan.|苏楠：看我家乡的照片。它是湖南的一个小镇。
+Liu Zhaoyang: Wow, what a nice place!|刘朝阳：哇，多美的地方啊！
+Su Nan: Yes, it is. But many years ago, it was a small village. The buildings were old and poor. The river was dirty. Sometimes we could even see mice.|苏楠：是的。但是很多年前，它是一个小村庄。房子又旧又破。河水很脏。有时我们甚至能看到老鼠。
+Liu Zhaoyang: Was there a bridge over the river before?|刘朝阳：以前河上有桥吗？
+Su Nan: No, there wasn't. But it is different now. We built a bridge ten years ago. A large hotel, some restaurants and a big shopping mall opened a few years ago.|苏楠：不，没有。但现在不一样了。十年前我们建了一座桥。几年前开了一家大酒店、一些餐馆和一个大购物中心。
+Liu Zhaoyang: Is that a public square?|刘朝阳：那是广场吗？
+Su Nan: Yes, it is. In front of it, there are different kinds of flowers in the garden. And the public toilet beside it is very clean.|苏楠：是的。在它前面，花园里有各种各样的花。旁边的公共厕所也很干净。
+Liu Zhaoyang: Great! May I go and visit your hometown with you?|刘朝阳：太棒了！我可以和你一起去你家乡看看吗？
+Su Nan: Welcome!|苏楠：欢迎！
+#3 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Liu Zhaoyang: Hi, Li Shan! What did you do last Saturday?|刘朝阳：嗨，李珊！你上周六做什么了？
+Li Shan: I was busy. I cleaned the rooms, washed the clothes and cooked dinner.|李珊：我很忙。我打扫了房间，洗了衣服，还做了晚饭。
+Liu Zhaoyang: You are so helpful in the family. What did your parents do?|刘朝阳：你在家里真能干。你爸爸妈妈做什么了？
+Li Shan: My father worked in the garden. My mother was not at home.|李珊：我爸爸在花园里干活。我妈妈不在家。
+Liu Zhaoyang: Where did she go?|刘朝阳：她去哪儿了？
+Li Shan: She went to the hospital to look after my grandma.|李珊：她去医院照顾我奶奶了。
+Liu Zhaoyang: I'm sorry to hear that.|刘朝阳：听到这个消息我很难过。
+Li Shan: It's OK. She is better now. How was your weekend?|李珊：没关系。她现在好多了。你的周末过得怎么样？
+Liu Zhaoyang: Wonderful! I visited some friends and we had a football match together.|刘朝阳：太棒了！我拜访了一些朋友，我们一起踢了一场足球赛。
+Li Shan: Sounds great!|李珊：听起来真棒！
+Part A Let's learn|A 部分 · 学一学
+What did you do last Saturday?|你上周六做什么了？
+I cleaned the rooms, washed the clothes and cooked dinner.|我打扫了房间，洗了衣服，还做了晚饭。
+Part B Let's read|B 部分 · 阅读
+Li Shan: Where did you go yesterday afternoon, Wu Chen?|李珊：吴晨，你昨天下午去哪儿了？
+Wu Chen: I went to the library.|吴晨：我去图书馆了。
+Li Shan: You really like reading.|李珊：你真喜欢读书。
+Wu Chen: Yes.|吴晨：是的。
+Li Shan: What book did you borrow?|李珊：你借了什么书？
+Wu Chen: A science book. I read it quietly in the reading room.|吴晨：一本科学书。我在阅览室里安静地读了它。
+Li Shan: What's it about?|李珊：它是关于什么的？
+Wu Chen: It is about the weather. It's interesting. I took a lot of notes.|吴晨：它是关于天气的。很有趣。我记了很多笔记。
+Li Shan: Really? Can you share them with me?|李珊：真的吗？你能和我分享吗？
+Wu Chen: Of course.|吴晨：当然可以。
+#4 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Colin: Mom, all my friends had a good time last summer holiday. Some of them traveled far away.|科林：妈妈，我所有的朋友去年暑假都玩得很开心。他们中有些人去了很远的地方旅行。
+Mom: Oh! Where did Li Shan go on her holiday?|妈妈：哦！李珊假期去哪儿了？
+Colin: She went to Qingdao.|科林：她去了青岛。
+Mom: That's a good place to spend the holiday. Who did she go with?|妈妈：那是个度假的好地方。她和谁一起去的？
+Colin: She went with her family. It's the first time for her to travel with them.|科林：她和家人一起去的。这是她第一次和家人一起旅行。
+Mom: How did they go there?|妈妈：他们怎么去的？
+Colin: They went there by train. They booked the tickets and the hotel a week before.|科林：他们坐火车去的。他们提前一周订了车票和酒店。
+Mom: That's necessary. What did they do there?|妈妈：那很有必要。他们在那儿做了什么？
+Colin: Li Shan and her mother played beach volleyball. Her father and her brother went water skiing. They also ate some seafood together. They had a lot of fun there.|科林：李珊和她妈妈打了沙滩排球。她爸爸和弟弟去滑水了。他们还一起吃了海鲜。他们在那儿玩得很开心。
+Mom: Sounds great!|妈妈：听起来真棒！
+Part A Let's learn|A 部分 · 学一学
+What did Li Shan do on her holiday?|李珊假期做了什么？
+She played beach volleyball.|她打了沙滩排球。
+Part B Let's read|B 部分 · 阅读
+On the National Day of this year, I went to Disneyland in Shanghai with my family. It was a wonderful day!|今年国庆节，我和家人去了上海迪士尼乐园。那是美好的一天！
+We saw many cartoon characters. They were so lovely.|我们看到了很多卡通人物。他们太可爱了。
+My sister and I greeted them excitedly and shook hands with them.|我和妹妹兴奋地和他们打招呼，还和他们握了手。
+My parents took photos for us.|爸爸妈妈给我们拍了照片。
+My favorite thing was playing games. I was excited to ride the roller coaster.|我最喜欢的是玩游戏。坐过山车让我很兴奋。
+Then we watched an interesting show.|然后我们看了一场有趣的表演。
+In the evening, we watched beautiful fireworks, and the lights made Disneyland colorful.|晚上，我们看了美丽的烟花，灯光把迪士尼乐园装点得五彩缤纷。
+It was an exciting trip. We all had a very nice day at Disneyland.|那是一次激动人心的旅行。我们在迪士尼乐园都度过了非常美好的一天。
+#5 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Amy: Hi, Liu Zhaoyang. What did you do yesterday?|埃米：嗨，刘朝阳。你昨天做什么了？
+Liu Zhaoyang: We had a school sports meet yesterday.|刘朝阳：我们昨天开了学校运动会。
+Amy: Wonderful! What sport did you take part in?|埃米：太棒了！你参加了什么项目？
+Liu Zhaoyang: I took part in the boys' 100-meter race and the long jump.|刘朝阳：我参加了男子100米赛跑和跳远。
+Amy: Did you win?|埃米：你赢了吗？
+Liu Zhaoyang: Yes, I did. I was the first in the 100-meter race.|刘朝阳：是的，我赢了。我在100米赛跑中得了第一。
+Amy: Wow, you are great! How about the long jump?|埃米：哇，你真棒！跳远呢？
+Liu Zhaoyang: I didn't win, but I tried my best.|刘朝阳：我没赢，但我尽力了。
+Amy: Anyway, you did well.|埃米：不管怎样，你表现得很好。
+Liu Zhaoyang: Thank you.|刘朝阳：谢谢你。
+Amy: Where there is a will there is a way. I believe you will do better next time.|埃米：有志者事竟成。我相信你下次会做得更好。
+Liu Zhaoyang: You are right. I will!|刘朝阳：你说得对。我会的！
+Part A Let's learn|A 部分 · 学一学
+What sport did you take part in?|你参加了什么项目？
+I took part in the boys' 100-meter race and the long jump.|我参加了男子100米赛跑和跳远。
+Part B Let's read|B 部分 · 阅读
+Colin is writing about the sports meet for the school newspaper.|科林正在为校报写一篇关于运动会的文章。
+The Sports Meet, by Colin Ford|《运动会》，作者：科林·福特
+The sports meet was great this year!|今年的运动会很精彩！
+There were different sports like running, long jump, high jump, discus throwing and so on.|有各种各样的项目，比如赛跑、跳远、跳高、掷铁饼等等。
+Our class did very well in the sports meet.|我们班在运动会上表现得非常好。
+I took part in the boys' 100-meter race.|我参加了男子100米赛跑。
+I ran very fast, but I fell down on the way.|我跑得很快，但在途中摔倒了。
+I hurt my left leg. Finally, I lost it.|我伤了左腿。最后，我输了比赛。
+I felt very sad, but my classmates said, "Colin, don't be sad. It's important to enjoy the match."|我很难过，但同学们说：“科林，别难过。享受比赛才是最重要的。”
+They were right. And I felt better.|他们说得对。我感觉好多了。
+We all had lots of fun at the school sports meet.|我们在学校运动会上都玩得很开心。
+#6 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Li Shan: Liu Zhaoyang, did you take part in the school sale yesterday morning?|李珊：刘朝阳，你昨天上午参加学校义卖了吗？
+Liu Zhaoyang: Yes, I did. I brought many things there.|刘朝阳：是的，我参加了。我带了很多东西去。
+Li Shan: What did you sell?|李珊：你卖了什么？
+Liu Zhaoyang: I sold some color paper, magazines, a robot, a pencil box ... It was really interesting. I had a good time.|刘朝阳：我卖了一些彩纸、杂志、一个机器人、一个铅笔盒……真的很有趣。我玩得很开心。
+Li Shan: Great! Did you buy anything?|李珊：太好了！你买东西了吗？
+Liu Zhaoyang: Yes, I did. I bought a notebook. I need it for writing new words. What did you sell?|刘朝阳：是的，我买了。我买了一个笔记本。我需要用它写生词。你卖了什么？
+Li Shan: I sold some toy cars, dolls and story books. I was so glad.|李珊：我卖了一些玩具车、玩偶和故事书。我非常高兴。
+Liu Zhaoyang: That's so cool. What shall we do with the money?|刘朝阳：太酷了。我们用这些钱做什么呢？
+Li Shan: Let's give it to the Hope School.|李珊：我们把它捐给希望小学吧。
+Liu Zhaoyang: Good idea!|刘朝阳：好主意！
+Part A Let's learn|A 部分 · 学一学
+Did you take part in the school sale yesterday morning?|你昨天上午参加学校义卖了吗？
+Yes, I did. I sold some color paper, magazines ...|是的，我参加了。我卖了一些彩纸、杂志……
+Part B Let's read|B 部分 · 阅读
+January 1st, Sunday, Sunny|1月1日，星期日，晴
+This morning my father said, "We're free today. Let's see a film."|今天早上爸爸说：“我们今天有空。我们去看电影吧。”
+My little sister and I jumped excitedly.|我和妹妹兴奋地跳了起来。
+Then we went to the cinema together.|然后我们一起去了电影院。
+We saw many people standing in line.|我们看到很多人在排队。
+We waited in line and bought the tickets.|我们排队买了票。
+My father also bought us some popcorn and orange juice.|爸爸还给我们买了一些爆米花和橙汁。
+The film began at ten o'clock. It was very interesting.|电影十点开始。它非常有趣。
+The boy was bright and funny in the story. He made us laugh a lot.|故事里的男孩聪明又有趣。他让我们笑个不停。
+We were moved by his kindness and bravery.|我们被他的善良和勇敢打动了。
+The film lasted about an hour and a half.|电影大约放了一个半小时。
+We enjoyed it very much and had a very good time today.|我们非常喜欢这部电影，今天过得非常开心。
+#7 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Waitress: Welcome! Here's the menu. What would you like?|服务员：欢迎光临！这是菜单。您想要点什么？
+Mom: I'd like a piece of pizza and a plate of beef.|妈妈：我想要一块比萨和一盘牛肉。
+Li Shan: Some vegetables and a bowl of porridge, please. Oh, the cake looks nice! Can I get a piece of cake, Mom?|李珊：请给我一些蔬菜和一碗粥。哦，这个蛋糕看起来真好！妈妈，我能要一块蛋糕吗？
+Mom: Of course.|妈妈：当然可以。
+Waitress: Would you like something to drink?|服务员：您想喝点什么吗？
+Mom: Yes, please.|妈妈：好的。
+Waitress: What kind of drinks would you like, juice or water?|服务员：您想要什么饮料，果汁还是水？
+Mom: A bottle of water and a glass of juice.|妈妈：一瓶水和一杯果汁。
+Waitress: Would you like some ice in your drink?|服务员：您的饮料要加冰吗？
+Mom: No, thanks.|妈妈：不用，谢谢。
+Waitress: OK. Wait a moment, please.|服务员：好的。请稍等。
+Part A Let's learn|A 部分 · 学一学
+What would you like?|你想要什么？
+I'd like a piece of pizza.|我想要一块比萨。
+Would you like something to drink?|你想喝点什么吗？
+Yes. I'd like a glass of juice.|是的。我想要一杯果汁。
+Part B Let's read|B 部分 · 阅读
+It was Saturday afternoon. My parents would like to go shopping, so we went to the supermarket with them.|那是星期六下午。爸爸妈妈想去购物，所以我们和他们一起去了超市。
+The vegetables looked fresh.|蔬菜看起来很新鲜。
+"How about making vegetable salad this evening?" Dad asked.|“今晚做蔬菜沙拉怎么样？”爸爸问。
+"OK!" Mom said happily.|“好啊！”妈妈高兴地说。
+We bought some cucumbers, tomatoes and cabbages.|我们买了一些黄瓜、西红柿和卷心菜。
+"I'd like some beef, Mom," I said. Mom smiled and took some.|“妈妈，我想要一些牛肉。”我说。妈妈笑着拿了一些。
+"Don't forget to buy tea. My grandpa would like a cup of tea every morning," my sister said.|“别忘了买茶叶。爷爷每天早上都想喝一杯茶。”妹妹说。
+"Haha. Don't worry. I'll put it in the basket," Dad said.|“哈哈。别担心。我会把它放进购物篮里的。”爸爸说。
+We bought our favorite things that day. All of us felt very happy.|那天我们买了自己最喜欢的东西。我们都感到非常开心。
+#8 Part A & Part B（课本原文）
+Part A Let's talk|A 部分 · 对话
+Li Shan: What's the date today?|李珊：今天几号？
+Max: Let me see. Christmas Day was a week ago. It's December 31st, the last day of this year.|马克斯：让我想想。圣诞节是一周前。今天是12月31日，今年的最后一天。
+Li Shan: So tomorrow is January 1st, New Year's Day.|李珊：那明天就是1月1日，元旦。
+Max: How time flies!|马克斯：时间过得真快啊！
+Li Shan: What did you do this year?|李珊：你今年做了什么？
+Max: I read some books about science. I learned a lot from the books. What did you do?|马克斯：我读了一些科学方面的书。我从书中学到了很多。你做了什么？
+Li Shan: I learned to take photos from my uncle. I wish to take some beautiful photos in the new year.|李珊：我跟叔叔学了拍照。我希望在新的一年里拍一些漂亮的照片。
+Max: Do you have a plan for the new year?|马克斯：你有新年计划吗？
+Li Shan: Yes, I do. I wish to join our ping-pong team. I'd like to learn to play well.|李珊：是的，我有。我希望加入我们的乒乓球队。我想学会打好乒乓球。
+Max: I wish you good luck.|马克斯：祝你好运。
+Part A Let's learn|A 部分 · 学一学
+What do people do on the Spring Festival?|人们在春节做什么？
+They put up the Spring Festival couplets.|他们贴春联。
+Part B Let's read|B 部分 · 阅读
+To: kitty@friend.cn. Subject: The Spring Festival.|收件人：kitty@friend.cn。主题：春节。
+Dear Kitty,|亲爱的凯蒂：
+The Spring Festival is coming. It's very important for Chinese people. We like it very much.|春节快到了。它对中国人来说非常重要。我们非常喜欢它。
+Before the Spring Festival, people do house cleaning, go shopping and make paper-cuts for the festival.|春节前，人们打扫房子、购物，还为节日剪纸。
+On the eve of the festival, people put up the Spring Festival couplets and hang red lanterns.|在除夕，人们贴春联、挂红灯笼。
+They have a big family dinner together.|他们一起吃一顿丰盛的团圆饭。
+Then they watch fireworks to welcome the Chinese New Year.|然后他们看烟花，迎接中国新年。
+That's really a happy moment of every family.|那真是每个家庭的幸福时刻。
+During the Spring Festival, people wear new clothes and visit their relatives and friends.|春节期间，人们穿新衣服，走亲访友。
+They exchange greetings and best wishes in the new year.|他们在新年里互致问候和美好祝愿。
+Does this sound wonderful? Would you like to come to my home and enjoy the festival together with us? Please write to me.|听起来很棒吧？你愿意来我家和我们一起过节吗？请给我回信。
+Yours, Liu Zhaoyang|你的朋友，刘朝阳
