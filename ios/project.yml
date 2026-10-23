@@ -1,0 +1,25 @@
+name: SLBEnglish
+options:
+  bundleIdPrefix: com.lanpiguyantou
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  SLBEnglish:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+        excludes:
+          - Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lanpiguyantou.slbenglish
+        PRODUCT_NAME: SLBEnglish
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Sources/Info.plist
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
