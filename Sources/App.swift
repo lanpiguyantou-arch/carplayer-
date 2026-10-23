@@ -121,7 +121,7 @@ struct TopicView: View {
                 .padding(.vertical, 4)
             }
             if !topic.mc.isEmpty {
-                Section("掌握标准") { ForEach(topic.mc, id: \.self) { Label($0, systemImage: "checkmark.circle") } }
+                Section(topic.dm == "阅读方法" ? "答题方法" : "掌握标准") { ForEach(topic.mc, id: \.self) { Label($0, systemImage: "checkmark.circle") } }
             }
             Section {
                 NavigationLink { PracticeView(title: topic.n, questions: (kg.bank[topic.id] ?? []).sorted { $0.df < $1.df }) } label: {
