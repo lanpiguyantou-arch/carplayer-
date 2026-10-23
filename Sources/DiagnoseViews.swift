@@ -54,6 +54,7 @@ struct DiagnoseRunView: View {
                         lastOK = ok
                         answered = true
                     }
+                    .id("\(session.asked)-\(c.question.id)")
                     if answered {
                         Button("下一题") { answered = false; session.answer(lastOK) }
                             .buttonStyle(.borderedProminent).frame(maxWidth: .infinity)
