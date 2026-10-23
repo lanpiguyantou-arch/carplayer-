@@ -1,5 +1,18 @@
 import SwiftUI
 import AVFoundation
+import AVKit
+
+/// AirPlay picker: on iOS 26.4+ with CarPlay connected, the car display shows up here.
+struct RoutePicker: UIViewRepresentable {
+    func makeUIView(context: Context) -> AVRoutePickerView {
+        let v = AVRoutePickerView()
+        v.prioritizesVideoDevices = true
+        v.tintColor = .white
+        v.activeTintColor = .systemGreen
+        return v
+    }
+    func updateUIView(_ uiView: AVRoutePickerView, context: Context) {}
+}
 
 final class PlayerUIView: UIView {
     override class var layerClass: AnyClass { AVPlayerLayer.self }
@@ -74,6 +87,7 @@ struct PlayerView: View {
                     .font(.headline)
                     .lineLimit(1)
                 Spacer()
+                RoutePicker().frame(width: 44, height: 44)
                 Menu {
                     ForEach(PlayerModel.rates, id: \.self) { r in
                         Button { model.setRate(r) } label: { Text(String(format: "%gx", r)) }
