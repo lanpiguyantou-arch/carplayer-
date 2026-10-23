@@ -18,6 +18,8 @@ Mrs.|太太；夫人
 office|办公室
 know|知道
 classmate|同班同学
+leaf|树叶
+carry food|搬运食物
 #2
 last|最近的
 week|星期；周
@@ -48,6 +50,7 @@ a few|一些；几个
 front|前面
 in front of|在……前面
 kinds of|各种各样的
+shopping mall|购物中心
 #3
 look after|照顾；照料
 hear|听到；听见
@@ -85,6 +88,9 @@ excitedly|兴奋地；激动地
 ride|乘；骑
 roller coaster|过山车
 exciting|激动人心的
+book a ticket|订票
+fireworks|烟花
+eat seafood|吃海鲜
 #5
 sports meet|运动会
 take part in|参加；参与
