@@ -23,6 +23,10 @@ for x in q:
     if x.get('percent'): e['pc']=True
     if x.get('hideChoiceText'): e['hc']=True
     Q.append(e)
+ex=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','Sources','Resources','extra.json')
+if os.path.exists(ex):
+    e=json.load(open(ex,encoding='utf-8'))
+    T=e['topics']+T; D=e['deps']+D; Q=e['questions']+Q
 os.makedirs(os.path.dirname(out),exist_ok=True)
 json.dump(dict(topics=T,deps=D,questions=Q),open(out,'w'),ensure_ascii=False,separators=(',',':'))
 print(len(T),len(D),len(Q))
