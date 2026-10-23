@@ -1,8 +1,8 @@
-name: Build CarPlayer IPA
+name: Build KGStudy IPA
 
 on:
   push:
-    branches: [main]
+    branches: [kgstudy]
   workflow_dispatch:
 
 permissions:
@@ -15,6 +15,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Fetch knowledge-graph data (xiaoyang111222/cn-math-taxonomy, CC BY-NC 4.0)
+        run: |
+          mkdir -p upstream
+          for f in topics dependencies questions; do
+            curl -fsSL -o upstream/$f.json https://raw.githubusercontent.com/xiaoyang111222/cn-math-taxonomy/main/data/$f.json
+          done
+          python3 scripts/prep.py upstream Sources/Resources/kgdata.json
+
       - name: Install XcodeGen
         run: brew install xcodegen
 
@@ -22,22 +30,22 @@ jobs:
         run: |
           set -o pipefail
           xcodegen generate
-          xcodebuild -project CarPlayer.xcodeproj -target CarPlayer -configuration Release -sdk iphoneos \
+          xcodebuild -project KGStudy.xcodeproj -target KGStudy -configuration Release -sdk iphoneos \
             SYMROOT="$PWD/build" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
             build 2>&1 | tee build.log
 
       - name: Package IPA
         run: |
           mkdir -p Payload
-          cp -R build/Release-iphoneos/CarPlayer.app Payload/
-          zip -qry CarPlayer-unsigned.ipa Payload
+          cp -R build/Release-iphoneos/KGStudy.app Payload/
+          zip -qry KGStudy-unsigned.ipa Payload
 
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "build-${{ github.run_number }}" CarPlayer-unsigned.ipa CarPlayer.entitlements CarPlayer-video.entitlements \
-            --title "CarPlayer build ${{ github.run_number }}" \
+          gh release create "kg-build-${{ github.run_number }}" KGStudy-unsigned.ipa \
+            --target kgstudy --title "KGStudy build ${{ github.run_number }}" \
             --notes "Unsigned IPA. Sign with your own certificate before installing."
 
       - name: Report failure
@@ -47,4 +55,4 @@ jobs:
         run: |
           touch build.log
           { echo '```'; grep -E "error:|BUILD FAILED" build.log | head -60 || true; echo '---'; tail -40 build.log || true; echo '```'; } > err.md
-          gh issue create --title "Build failed: run ${{ github.run_number }}" --body-file err.md
+          gh issue create --title "KGStudy build failed: run ${{ github.run_number }}" --body-file err.md
