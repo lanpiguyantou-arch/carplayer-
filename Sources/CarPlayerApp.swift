@@ -12,9 +12,16 @@ struct CarPlayerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            LibraryView()
-                .environmentObject(library)
-                .preferredColorScheme(.dark)
+            TabView {
+                LibraryView()
+                    .tabItem { Label("首页", systemImage: "house") }
+                DiscoverView()
+                    .tabItem { Label("发现", systemImage: "safari") }
+            }
+            .tint(.green)
+            .environmentObject(library)
+            .preferredColorScheme(.dark)
+            .onAppear { DLNARenderer.shared.start() }
         }
     }
 }
