@@ -50,10 +50,10 @@ struct ChapterUnit: Identifiable, Hashable {
 }
 
 enum Subject: String, CaseIterable, Identifiable {
-    case math, english, physics
+    case chinese, math, english, physics
     var id: String { rawValue }
-    var title: String { ["math": "数学", "english": "英语", "physics": "物理"][rawValue]! }
-    var icon: String { ["math": "function", "english": "character.book.closed", "physics": "atom"][rawValue]! }
+    var title: String { ["chinese": "语文", "math": "数学", "english": "英语", "physics": "物理"][rawValue]! }
+    var icon: String { ["chinese": "text.book.closed", "math": "function", "english": "character.book.closed", "physics": "atom"][rawValue]! }
 }
 
 final class KG {
