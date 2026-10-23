@@ -109,6 +109,17 @@ struct PlayerView: View {
                     .font(.headline)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity)
+                if model.sourceCount > 1 {
+                    Button { model.nextSource() } label: {
+                        Text("线路\(model.sourceIndex + 1)/\(model.sourceCount)")
+                            .font(.subheadline.bold())
+                            .padding(.horizontal, 8)
+                            .frame(height: 44)
+                            .background(Color.white.opacity(0.2))
+                            .cornerRadius(10)
+                    }
+                    .layoutPriority(2)
+                }
                 RoutePicker().frame(width: 44, height: 44).layoutPriority(2)
                 Menu {
                     ForEach(PlayerModel.rates, id: \.self) { r in
