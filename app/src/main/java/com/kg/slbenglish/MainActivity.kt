@@ -22,6 +22,13 @@ import android.widget.*
 import org.json.JSONArray
 import java.net.URLEncoder
 import java.util.Locale
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
+import android.content.ContentValues
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
 data class Word(val en: String, val zh: String, val unit: Int)
 data class Line(val en: String, val zh: String) {
@@ -341,7 +348,20 @@ class MainActivity : Activity() {
                 if (!inPlan) { addToPlan(u); Toast.makeText(this, "已加入：${u.words.size} 个单词 + ${u.sentences.size} 个句子，明天开始复习", Toast.LENGTH_LONG).show() }
                 showPlan()
             }, lp(top = 14))
-            body.addView(button("📖 课文点读（${u.textTitle}，带翻译）", Color.parseColor("#00897B")) { showPointRead("Unit ${u.n} 课文", u.textTitle, u.text) }, lp(top = 14))
+            val cc = card()
+            cc.addView(text("课本课文 Part A / Part B", 17f, Color.parseColor("#00897B"), true))
+            cc.addView(text("拍一下课本那一页，自动识别英文、翻译，然后点读", 13f, Color.GRAY), lp(top = 4))
+            val mine = loadMyTexts()
+            for (k in 0 until mine.length()) {
+                val o = mine.getJSONObject(k)
+                if (o.optInt("u") == u.n) cc.addView(button("📖 " + o.getString("t"), Color.parseColor("#00897B")) { translateMissing(k); showPointRead("Unit ${u.n} 课文", o.getString("t"), linesOf(o)) }, lp())
+            }
+            val pr = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            pr.addView(button("📷 添加 Part A", Color.parseColor("#26A69A")) { showAddText(u.n, "Unit ${u.n} Part A") }, LinearLayout.LayoutParams(0, -2, 1f))
+            pr.addView(button("📷 添加 Part B", Color.parseColor("#26A69A")) { showAddText(u.n, "Unit ${u.n} Part B") }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            cc.addView(pr, lp())
+            body.addView(cc, lp(top = 14))
+            body.addView(button("💬 单元情景对话（${u.textTitle}，带翻译）", Color.parseColor("#00897B")) { showPointRead("Unit ${u.n} 情景对话", u.textTitle, u.text) }, lp(top = 10))
             body.addView(button("① 单词表（点读）") { showWords(u.words, "Unit ${u.n} 单词") }, lp())
             body.addView(button("② 重点句（正常 / 慢速 / 循环跟读）") { showSentences(u) }, lp())
             body.addView(button("③ 记忆卡片（看中文想英文）", green) { showCards(u.words.shuffled(), "Unit ${u.n} 卡片", u.n) }, lp())
@@ -810,10 +830,59 @@ class MainActivity : Activity() {
         return rows.flatMap { r -> r.split(Regex("(?<=[。！？!?])")).map { it.trim() }.filter { it.isNotEmpty() } }
     }
 
-    private fun showAddText(): Unit {
-        val self = { showAddText() }
+    private var ocrTarget: EditText? = null
+    private var camUri: Uri? = null
+    private fun pickImage(camera: Boolean) {
+        try {
+            if (camera) {
+                val cv = ContentValues().apply { put(MediaStore.Images.Media.DISPLAY_NAME, "slb_" + System.currentTimeMillis() + ".jpg"); put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg") }
+                camUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv)
+                startActivityForResult(Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, camUri), 11)
+            } else {
+                startActivityForResult(Intent(Intent.ACTION_GET_CONTENT).setType("image/*"), 12)
+            }
+        } catch (e: Exception) {
+            if (camera && Build.VERSION.SDK_INT < 29) requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 3)
+            Toast.makeText(this, if (camera) "无法打开相机，请改用“从相册选”" else "无法打开相册", Toast.LENGTH_LONG).show()
+        }
+    }
+    @Deprecated("") override fun onActivityResult(req: Int, res: Int, data: Intent?) {
+        super.onActivityResult(req, res, data)
+        if (res != RESULT_OK) return
+        val uri = if (req == 11) camUri else data?.data
+        if (uri != null) runOcr(uri)
+    }
+    private fun runOcr(uri: Uri) {
+        Toast.makeText(this, "正在识别课文…", Toast.LENGTH_SHORT).show()
+        try {
+            val img = InputImage.fromFilePath(this, uri)
+            TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS).process(img)
+                .addOnSuccessListener { r ->
+                    val raw = r.textBlocks.flatMap { b -> b.lines.map { it.text.trim() } }.filter { l ->
+                        val latin = l.count { it in 'a'..'z' || it in 'A'..'Z' }
+                        latin >= 2 && latin * 2 >= l.count { !it.isWhitespace() }
+                    }
+                    val out = ArrayList<String>()
+                    for (l in raw) {
+                        val startNew = out.isEmpty() || Regex("^[A-Z][A-Za-z ]{1,15}:").containsMatchIn(l) || Regex("[.!?\"”]$").containsMatchIn(out.last())
+                        if (startNew) out.add(l) else out[out.size - 1] = out.last() + " " + l
+                    }
+                    val t = ocrTarget
+                    if (out.isEmpty()) Toast.makeText(this, "没识别到英文，拍清楚一点再试", Toast.LENGTH_LONG).show()
+                    else if (t != null) {
+                        val old = t.text.toString().trim()
+                        t.setText((if (old.isEmpty()) "" else old + "\n") + out.joinToString("\n"))
+                        Toast.makeText(this, "识别到 ${out.size} 行，请对照课本改一下错字再保存", Toast.LENGTH_LONG).show()
+                    }
+                }
+                .addOnFailureListener { Toast.makeText(this, "识别失败：" + it.message, Toast.LENGTH_LONG).show() }
+        } catch (e: Exception) { Toast.makeText(this, "读取图片失败", Toast.LENGTH_LONG).show() }
+    }
+
+    private fun showAddText(unit: Int = 0, preTitle: String = ""): Unit {
+        val self = { showAddText(unit, preTitle) }
         page("添加课文", self) { body ->
-            val title = EditText(this).apply { hint = "标题，如 Unit 1 Part B"; background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10)) }
+            val title = EditText(this).apply { setText(preTitle); hint = "标题，如 Unit 1 Part B"; background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10)) }
             body.addView(title, lp())
             body.addView(text("英文课文（一行一句最准确，也可整段粘贴自动分句）", 14f, Color.DKGRAY), lp(top = 12))
             val en = EditText(this).apply {
@@ -822,6 +891,12 @@ class MainActivity : Activity() {
                 background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10))
             }
             body.addView(en, lp())
+            ocrTarget = en
+            val orow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            orow.addView(button("📷 拍照识别", Color.parseColor("#26A69A")) { pickImage(true) }, LinearLayout.LayoutParams(0, -2, 1f))
+            orow.addView(button("🖼 从相册选", Color.parseColor("#26A69A")) { pickImage(false) }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            body.addView(orow, lp())
+            body.addView(text("可以分几次拍（一页一张），识别结果会接在后面。", 12f, Color.GRAY), lp(top = 2))
             body.addView(text("中文翻译（可不填，不填会自动在线翻译）", 14f, Color.DKGRAY), lp(top = 12))
             val zh = EditText(this).apply {
                 minLines = 4; gravity = Gravity.TOP
@@ -837,7 +912,7 @@ class MainActivity : Activity() {
                 val la = JSONArray()
                 es.forEachIndexed { i, e -> la.put(org.json.JSONObject().put("e", e).put("z", if (zs.size == es.size) zs[i] else "")) }
                 val t = title.text.toString().ifBlank { "课文 " + (arr.length() + 1) }
-                arr.put(org.json.JSONObject().put("t", t).put("l", la))
+                arr.put(org.json.JSONObject().put("t", t).put("u", unit).put("l", la))
                 prefs.myTexts = arr.toString()
                 val idx = arr.length() - 1
                 translateMissing(idx)
