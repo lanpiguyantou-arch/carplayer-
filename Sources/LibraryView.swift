@@ -16,6 +16,12 @@ struct LibraryView: View {
     @State private var subText = ""
     @State private var showPlayer = false
     @State private var tab = 0
+    @State private var showClearConfirm = false
+    static let recommended: [(String, String)] = [
+        ("vbskycn/iptv（每6小时更新）", "https://live.zbds.top/tv/iptv4.m3u"),
+        ("suxuang/myIPTV IPv4", "https://gh-proxy.org/raw.githubusercontent.com/suxuang/myIPTV/main/ipv4.m3u"),
+        ("zhi35/iptv（每日更新）", "https://live.zhi35.com/iptv.m3u")
+    ]
     @State private var selectedGroup: String?
     private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
 
@@ -54,7 +60,7 @@ struct LibraryView: View {
                 .padding(.vertical, 8)
             }
             ScrollView {
-                let items = library.remoteGroups.first { $0.name == currentGroupName }?.items ?? []
+                let items = uniqueByTitle(library.remoteGroups.first { $0.name == currentGroupName }?.items ?? [])
                 LazyVGrid(columns: columns, spacing: 18) {
                     ForEach(items) { item in
                         Button { open(item, queue: items) } label: { card(item) }
@@ -103,6 +109,11 @@ struct LibraryView: View {
         }
     }
 
+    private func uniqueByTitle(_ items: [MediaItem]) -> [MediaItem] {
+        var seen = Set<String>()
+        return items.filter { seen.insert($0.title).inserted }
+    }
+
     private func open(_ item: MediaItem, queue: [MediaItem]) {
         library.resolve(item) { resolved in
             guard let resolved = resolved else { return }
@@ -137,6 +148,13 @@ struct LibraryView: View {
                         Button { showImporter = true } label: { Label("从文件导入", systemImage: "folder") }
                         Button { showSubscribe = true } label: { Label("订阅频道列表 (m3u/txt)", systemImage: "antenna.radiowaves.left.and.right") }
                         Button { showAddURL = true } label: { Label("添加单个链接", systemImage: "link") }
+                        Menu {
+                            ForEach(LibraryView.recommended, id: \.1) { name, url in
+                                Button(name) { if let u = URL(string: url) { library.subscribe(u); tab = 0 } }
+                            }
+                        } label: { Label("推荐直播源 (GitHub)", systemImage: "star") }
+                        Divider()
+                        Button(role: .destructive) { showClearConfirm = true } label: { Label("清空所有网络源", systemImage: "trash") }
                     } label: {
                         Image(systemName: "plus.circle.fill").font(.title2)
                     }
@@ -185,6 +203,10 @@ struct LibraryView: View {
                 Button("取消", role: .cancel) { subText = "" }
             } message: {
                 Text("频道会按 group-title / #genre# 自动分到各电视台")
+            }
+            .confirmationDialog("清空所有网络源？本地视频不受影响", isPresented: $showClearConfirm, titleVisibility: .visible) {
+                Button("清空", role: .destructive) { library.clearRemote() }
+                Button("取消", role: .cancel) {}
             }
             .fullScreenCover(isPresented: $showPlayer) {
                 PlayerView()
