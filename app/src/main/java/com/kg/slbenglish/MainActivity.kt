@@ -24,7 +24,11 @@ import java.net.URLEncoder
 import java.util.Locale
 
 data class Word(val en: String, val zh: String, val unit: Int)
-data class Lesson(val n: Int, val title: String, val words: List<Word>, val sentences: List<String>)
+data class Line(val en: String, val zh: String) {
+    val who: String get() = Regex("^([A-Z][A-Za-z ]{1,15}): ").find(en)?.groupValues?.get(1) ?: ""
+    val say: String get() = if (who.isEmpty()) en else en.substring(who.length + 2)
+}
+data class Lesson(val n: Int, val title: String, val words: List<Word>, val sentences: List<Line>, val textTitle: String, val text: List<Line>)
 
 class Speaker(private val ctx: Context, private val prefs: Prefs) {
     private var tts: TextToSpeech? = null
@@ -62,8 +66,22 @@ class Speaker(private val ctx: Context, private val prefs: Prefs) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "u" + System.nanoTime())
     }
 
+    private fun youdao(t: String) = "https://dict.youdao.com/dictvoice?audio=" + URLEncoder.encode(t, "UTF-8").replace("+", "%20") + "&type=" + prefs.accent
+    private fun baidu(t: String) = "https://fanyi.baidu.com/gettts?lan=" + (if (prefs.accent == 1) "uk" else "en") + "&text=" + URLEncoder.encode(t, "UTF-8").replace("+", "%20") + "&spd=5&source=web"
+
     private fun playOnline(text: String, rate: Float, fallback: Boolean = true) {
-        val url = "https://dict.youdao.com/dictvoice?audio=" + URLEncoder.encode(text, "UTF-8") + "&type=" + prefs.accent
+        // 单词用有道真人发音；句子有道不支持，用百度整句朗读；失败依次换源
+        val urls = if (text.trim().contains(' ')) listOf(baidu(text), youdao(text)) else listOf(youdao(text), baidu(text))
+        playUrls(text, urls, 0, rate, fallback)
+    }
+
+    private fun playUrls(text: String, urls: List<String>, idx: Int, rate: Float, fallback: Boolean) {
+        if (idx >= urls.size) {
+            if (fallback && ttsReady) playTts(text, rate)
+            else Toast.makeText(ctx, "在线发音失败，请检查网络", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val url = urls[idx]
         try {
             val mp = MediaPlayer()
             player = mp
@@ -78,13 +96,12 @@ class Speaker(private val ctx: Context, private val prefs: Prefs) {
             }
             mp.setOnCompletionListener { onDone?.invoke() }
             mp.setOnErrorListener { _, _, _ ->
-                if (fallback && ttsReady) playTts(text, rate)
-                else Toast.makeText(ctx, "在线发音失败，请检查网络", Toast.LENGTH_SHORT).show()
+                main.post { if (player === mp) playUrls(text, urls, idx + 1, rate, fallback) }
                 true
             }
             mp.prepareAsync()
         } catch (e: Exception) {
-            if (fallback && ttsReady) playTts(text, rate)
+            playUrls(text, urls, idx + 1, rate, fallback)
         }
     }
 
@@ -111,6 +128,12 @@ class Prefs(ctx: Context) {
     var wrong: Set<String>
         get() = sp.getStringSet("wrong", emptySet()) ?: emptySet()
         set(v) { sp.edit().putStringSet("wrong", HashSet(v)).apply() }
+    var showZh: Boolean
+        get() = sp.getBoolean("showZh", true)
+        set(v) { sp.edit().putBoolean("showZh", v).apply() }
+    var myTexts: String
+        get() = sp.getString("myTexts", "[]") ?: "[]"
+        set(v) { sp.edit().putString("myTexts", v).apply() }
     fun learned(u: Int) = sp.getInt("learned$u", 0)
     fun setLearned(u: Int, v: Int) { sp.edit().putInt("learned$u", maxOf(v, learned(u))).apply() }
 }
@@ -149,10 +172,10 @@ class MainActivity : Activity() {
             val o = arr.getJSONObject(i)
             val n = o.getInt("n")
             val w = o.getJSONArray("w")
-            val s = o.getJSONArray("s")
+            fun lines(k: String): List<Line> { val a = o.getJSONArray(k); return (0 until a.length()).map { Line(a.getJSONObject(it).getString("e"), a.getJSONObject(it).getString("z")) } }
             Lesson(n, o.getString("t"),
                 (0 until w.length()).map { Word(w.getJSONObject(it).getString("e"), w.getJSONObject(it).getString("z"), n) },
-                (0 until s.length()).map { s.getString(it) })
+                lines("s"), o.getString("xt"), lines("x"))
         }
     }
 
@@ -225,6 +248,11 @@ class MainActivity : Activity() {
             c.setOnClickListener { showUnit(u) }
             body.addView(c, lp(top = 10))
         }
+        val mt = card()
+        mt.addView(text("我的课文（自己添加）", 17f, Color.parseColor("#00897B"), true))
+        mt.addView(text("粘贴课本里的英文，自动分句、点读、翻译", 13f, Color.GRAY), lp(top = 4))
+        mt.setOnClickListener { showMyTexts() }
+        body.addView(mt, lp(top = 14))
         val w = card()
         w.addView(text("错词本（${prefs.wrong.size}）", 17f, red, true))
         w.addView(text("听写和卡片里记错的词会自动收进来", 13f, Color.GRAY), lp(top = 4))
@@ -263,7 +291,8 @@ class MainActivity : Activity() {
         val self = { showUnit(u) }
         page("Unit ${u.n}", self) { body ->
             body.addView(text(u.title, 20f, bold = true), lp())
-            body.addView(button("① 单词表（点读）") { showWords(u.words, "Unit ${u.n} 单词") }, lp(top = 14))
+            body.addView(button("📖 课文点读（${u.textTitle}，带翻译）", Color.parseColor("#00897B")) { showPointRead("Unit ${u.n} 课文", u.textTitle, u.text) }, lp(top = 14))
+            body.addView(button("① 单词表（点读）") { showWords(u.words, "Unit ${u.n} 单词") }, lp())
             body.addView(button("② 重点句（正常 / 慢速 / 循环跟读）") { showSentences(u) }, lp())
             body.addView(button("③ 记忆卡片（看中文想英文）", green) { showCards(u.words.shuffled(), "Unit ${u.n} 卡片", u.n) }, lp())
             body.addView(button("④ 听音拼写（听写）", Color.parseColor("#FB8C00")) { showDictation(u.words.shuffled(), "Unit ${u.n} 听写", u.n) }, lp())
@@ -308,9 +337,11 @@ class MainActivity : Activity() {
         val self = { showSentences(u) }
         page("Unit ${u.n} 重点句", self) { body ->
             body.addView(text("“循环”会一遍遍慢速重复，方便跟读；再点一次停止。", 13f, Color.GRAY), lp())
-            for (s in u.sentences) {
+            for (line in u.sentences) {
+                val s = line.en
                 val c = card()
                 c.addView(text(s, 18f, bold = true))
+                if (prefs.showZh && line.zh.isNotEmpty()) c.addView(text(line.zh, 14f, Color.DKGRAY), lp(top = 4))
                 val btns = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
                 btns.addView(button("▶ 正常") { speaker.onDone = null; speaker.speak(s) }, LinearLayout.LayoutParams(0, -2, 1f))
                 btns.addView(button("🐢 慢速", green) { speaker.onDone = null; speaker.speak(s, true) },
@@ -420,6 +451,153 @@ class MainActivity : Activity() {
             }
             render()
         }
+    }
+
+    // ---------- 课文点读
+    private fun showPointRead(title: String, sub: String, lines: List<Line>): Unit {
+        val self = { showPointRead(title, sub, lines) }
+        page(title, self) { body ->
+            body.addView(text(sub, 20f, bold = true), lp())
+            body.addView(text("点一句读一句，长按这句慢速读。", 13f, Color.GRAY), lp(top = 4))
+            val ctl = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            val cards = ArrayList<LinearLayout>()
+            val zhViews = ArrayList<TextView>()
+            var cur = -1
+            fun mark(i: Int) {
+                cards.forEachIndexed { k, c -> c.background = if (k == i) round(Color.parseColor("#E3F2FD"), 14, blue) else round(Color.WHITE) }
+                cur = i
+                if (i >= 0) { val sv = body.parent as? ScrollView; sv?.post { sv.smoothScrollTo(0, maxOf(0, cards[i].top - dp(80))) } }
+            }
+            fun readFrom(i: Int, slow: Boolean) {
+                if (i >= lines.size) { speaker.onDone = null; mark(-1); return }
+                mark(i)
+                speaker.onDone = { Handler(Looper.getMainLooper()).postDelayed({ if (speaker.onDone != null) readFrom(i + 1, slow) }, 600) }
+                speaker.speak(lines[i].say, slow)
+            }
+            ctl.addView(button("▶ 全文连读") { readFrom(0, false) }, LinearLayout.LayoutParams(0, -2, 1f))
+            ctl.addView(button("🐢 慢速连读", green) { readFrom(0, true) }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            ctl.addView(button("⏹ 停", red) { speaker.onDone = null; speaker.stop(); mark(-1) }, LinearLayout.LayoutParams(0, -2, 0.6f).apply { leftMargin = dp(8) })
+            body.addView(ctl, lp(top = 10))
+            val zhBtn = button(if (prefs.showZh) "隐藏中文翻译" else "显示中文翻译", Color.GRAY) {}
+            zhBtn.setOnClickListener {
+                prefs.showZh = !prefs.showZh
+                zhViews.forEach { it.visibility = if (prefs.showZh) View.VISIBLE else View.GONE }
+                zhBtn.text = if (prefs.showZh) "隐藏中文翻译" else "显示中文翻译"
+            }
+            body.addView(zhBtn, lp())
+            lines.forEachIndexed { i, l ->
+                val c = card()
+                if (l.who.isNotEmpty()) c.addView(text(l.who, 13f, Color.parseColor("#FB8C00"), true))
+                c.addView(text(l.say, 19f, Color.parseColor("#0D47A1"), true))
+                val zh = text(if (l.zh.isEmpty()) "（翻译中…）" else l.zh, 15f, Color.DKGRAY)
+                zh.visibility = if (prefs.showZh) View.VISIBLE else View.GONE
+                zhViews.add(zh)
+                c.addView(zh, lp(top = 4))
+                c.setOnClickListener { speaker.onDone = null; mark(i); speaker.speak(l.say) }
+                c.setOnLongClickListener { speaker.onDone = null; mark(i); speaker.speak(l.say, true); true }
+                cards.add(c)
+                body.addView(c, lp(top = 8))
+            }
+        }
+    }
+
+    // ---------- 我的课文
+    private fun loadMyTexts(): org.json.JSONArray = try { JSONArray(prefs.myTexts) } catch (_: Exception) { JSONArray() }
+    private fun linesOf(o: org.json.JSONObject): List<Line> { val a = o.getJSONArray("l"); return (0 until a.length()).map { Line(a.getJSONObject(it).getString("e"), a.getJSONObject(it).optString("z")) } }
+
+    private fun showMyTexts(): Unit {
+        val self = { showMyTexts() }
+        page("我的课文", self) { body ->
+            body.addView(button("＋ 添加一篇课文", Color.parseColor("#00897B")) { showAddText() }, lp())
+            val arr = loadMyTexts()
+            if (arr.length() == 0) body.addView(text("还没有课文。点上面添加，把课本上的英文打进来或粘贴进来。", 15f, Color.GRAY), lp(top = 16))
+            for (i in arr.length() - 1 downTo 0) {
+                val o = arr.getJSONObject(i)
+                val c = card()
+                c.addView(text(o.getString("t"), 17f, bold = true))
+                c.addView(text("${o.getJSONArray("l").length()} 句 · 长按删除", 13f, Color.GRAY), lp(top = 4))
+                c.setOnClickListener { val ls = linesOf(o); translateMissing(i); showPointRead("我的课文", o.getString("t"), ls) }
+                c.setOnLongClickListener {
+                    android.app.AlertDialog.Builder(this).setMessage("删除《${o.getString("t")}》？")
+                        .setPositiveButton("删除") { _, _ -> arr.remove(i); prefs.myTexts = arr.toString(); back.removeAt(back.size - 1); showMyTexts() }
+                        .setNegativeButton("取消", null).show(); true
+                }
+                body.addView(c, lp(top = 10))
+            }
+        }
+    }
+
+    private fun splitEn(t: String): List<String> {
+        val rows = t.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        return rows.flatMap { r -> r.split(Regex("(?<=[.!?])\\s+(?=[A-Z\"'])")).map { it.trim() }.filter { it.isNotEmpty() } }
+    }
+    private fun splitZh(t: String): List<String> {
+        val rows = t.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        return rows.flatMap { r -> r.split(Regex("(?<=[。！？!?])")).map { it.trim() }.filter { it.isNotEmpty() } }
+    }
+
+    private fun showAddText(): Unit {
+        val self = { showAddText() }
+        page("添加课文", self) { body ->
+            val title = EditText(this).apply { hint = "标题，如 Unit 1 Part B"; background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10)) }
+            body.addView(title, lp())
+            body.addView(text("英文课文（一行一句最准确，也可整段粘贴自动分句）", 14f, Color.DKGRAY), lp(top = 12))
+            val en = EditText(this).apply {
+                minLines = 6; gravity = Gravity.TOP; hint = "Colin: Look! There is a baby panda.\nAlice: Where is its mother?"
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10))
+            }
+            body.addView(en, lp())
+            body.addView(text("中文翻译（可不填，不填会自动在线翻译）", 14f, Color.DKGRAY), lp(top = 12))
+            val zh = EditText(this).apply {
+                minLines = 4; gravity = Gravity.TOP
+                inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10))
+            }
+            body.addView(zh, lp())
+            body.addView(button("保存并开始点读", Color.parseColor("#00897B")) {
+                val es = splitEn(en.text.toString())
+                if (es.isEmpty()) { Toast.makeText(this, "先输入英文课文", Toast.LENGTH_SHORT).show(); return@button }
+                val zs = splitZh(zh.text.toString())
+                val arr = loadMyTexts()
+                val la = JSONArray()
+                es.forEachIndexed { i, e -> la.put(org.json.JSONObject().put("e", e).put("z", if (zs.size == es.size) zs[i] else "")) }
+                val t = title.text.toString().ifBlank { "课文 " + (arr.length() + 1) }
+                arr.put(org.json.JSONObject().put("t", t).put("l", la))
+                prefs.myTexts = arr.toString()
+                val idx = arr.length() - 1
+                translateMissing(idx)
+                back.removeAt(back.size - 1)
+                showPointRead("我的课文", t, linesOf(arr.getJSONObject(idx)))
+            }, lp(top = 16))
+        }
+    }
+
+    private fun translateMissing(idx: Int) {
+        val arr = loadMyTexts()
+        if (idx >= arr.length()) return
+        val la = arr.getJSONObject(idx).getJSONArray("l")
+        val todo = (0 until la.length()).filter { la.getJSONObject(it).optString("z").isEmpty() }
+        if (todo.isEmpty()) return
+        Thread {
+            var ok = 0
+            for (k in todo) {
+                try {
+                    val e = la.getJSONObject(k).getString("e")
+                    val u = java.net.URL("https://api.mymemory.translated.net/get?langpair=en%7Czh-CN&q=" + URLEncoder.encode(e, "UTF-8"))
+                    val c = u.openConnection() as java.net.HttpURLConnection
+                    c.connectTimeout = 8000; c.readTimeout = 8000
+                    val r = c.inputStream.bufferedReader().readText()
+                    val z = org.json.JSONObject(r).getJSONObject("responseData").getString("translatedText")
+                    if (z.isNotBlank()) { la.getJSONObject(k).put("z", z); ok++ }
+                } catch (_: Exception) {}
+            }
+            runOnUiThread {
+                val cur = loadMyTexts()
+                if (idx < cur.length()) { cur.getJSONObject(idx).put("l", la); prefs.myTexts = cur.toString() }
+                Toast.makeText(this, if (ok > 0) "已自动翻译 $ok 句，返回再打开即可看到" else "自动翻译失败，请检查网络", Toast.LENGTH_SHORT).show()
+            }
+        }.start()
     }
 
     private fun showWrong(): Unit {
