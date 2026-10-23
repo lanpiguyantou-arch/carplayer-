@@ -31,19 +31,60 @@ final class PlayerModel: ObservableObject {
         setupRemoteCommands()
     }
 
+    @Published var sourceIndex = 0
+    @Published var sourceCount = 1
+    private var sources: [MediaItem] = []
+    private var timeoutWork: DispatchWorkItem?
+
     func play(_ item: MediaItem, queue: [MediaItem]) {
+        sources = Library.shared.sources(for: item)
+        sourceCount = sources.count
+        sourceIndex = 0
+        start(sources.first ?? item, queue: queue)
+    }
+
+    /// Manually or automatically try the next 线路 of the same channel.
+    func nextSource(auto: Bool = false) {
+        guard sourceCount > 1 else {
+            if auto { statusText = "这个频道连不上（源失效或被限制地区），换个频道试试" }
+            return
+        }
+        if auto && sourceIndex + 1 >= sourceCount {
+            statusText = "\(sourceCount) 条线路都连不上，换个频道试试"
+            return
+        }
+        sourceIndex = (sourceIndex + 1) % sourceCount
+        start(sources[sourceIndex], queue: queue, keepSources: true)
+    }
+
+    private func start(_ item: MediaItem, queue: [MediaItem], keepSources: Bool = false) {
         self.queue = queue
         current = item
         currentTime = 0
         duration = 0
-        let playerItem = AVPlayerItem(url: item.url)
+        var headers: [String: String] = [:]
+        if let ua = item.userAgent, !ua.isEmpty { headers["User-Agent"] = ua }
+        if let ref = item.referer, !ref.isEmpty { headers["Referer"] = ref }
+        let asset = AVURLAsset(url: item.url, options: headers.isEmpty ? nil : ["AVURLAssetHTTPHeaderFieldsKey": headers])
+        let playerItem = AVPlayerItem(asset: asset)
+        timeoutWork?.cancel()
+        if item.isRemote {
+            let work = DispatchWorkItem { [weak self, weak playerItem] in
+                guard let self = self, let p = playerItem, self.player.currentItem === p, p.status != .readyToPlay else { return }
+                self.nextSource(auto: true)
+            }
+            timeoutWork = work
+            DispatchQueue.main.asyncAfter(deadline: .now() + 12, execute: work)
+        }
         player.replaceCurrentItem(with: playerItem)
-        statusText = item.isRemote ? "正在连接…" : nil
+        statusText = item.isRemote ? (sourceCount > 1 ? "正在连接 线路\(sourceIndex + 1)/\(sourceCount)…" : "正在连接…") : nil
         statusObs = playerItem.observe(\.status, options: [.new]) { [weak self] it, _ in
             DispatchQueue.main.async {
                 switch it.status {
-                case .readyToPlay: self?.statusText = nil
-                case .failed: self?.statusText = "这个频道播放失败，源可能已失效，换一个试试\n\(it.error?.localizedDescription ?? "")"
+                case .readyToPlay: self?.statusText = nil; self?.timeoutWork?.cancel()
+                case .failed:
+                    self?.timeoutWork?.cancel()
+                    self?.nextSource(auto: true)
                 default: break
                 }
             }
@@ -73,6 +114,7 @@ final class PlayerModel: ObservableObject {
         player.pause()
         isPlaying = false
         statusText = nil
+        timeoutWork?.cancel()
         updateNowPlaying()
     }
 
@@ -94,7 +136,7 @@ final class PlayerModel: ObservableObject {
     }
 
     func next() {
-        guard let c = current, let i = queue.firstIndex(of: c), i + 1 < queue.count else {
+        guard let c = current, let i = queue.firstIndex(where: { $0.title == c.title && $0.group == c.group }), i + 1 < queue.count else {
             isPlaying = false
             updateNowPlaying()
             return
@@ -104,7 +146,7 @@ final class PlayerModel: ObservableObject {
 
     func previous() {
         if currentTime > 5 { seek(to: 0); return }
-        guard let c = current, let i = queue.firstIndex(of: c), i > 0 else { seek(to: 0); return }
+        guard let c = current, let i = queue.firstIndex(where: { $0.title == c.title && $0.group == c.group }), i > 0 else { seek(to: 0); return }
         play(queue[i - 1], queue: queue)
     }
 
