@@ -1,10 +1,10 @@
-name: CarPlayer
+name: KGStudy
 options:
   bundleIdPrefix: com.lanpiguyantou
   deploymentTarget:
     iOS: "16.0"
 targets:
-  CarPlayer:
+  KGStudy:
     type: application
     platform: iOS
     sources:
@@ -13,8 +13,8 @@ targets:
           - Info.plist
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.lanpiguyantou.carplayer
-        PRODUCT_NAME: CarPlayer
+        PRODUCT_BUNDLE_IDENTIFIER: com.lanpiguyantou.kgstudy
+        PRODUCT_NAME: KGStudy
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1,2"
         GENERATE_INFOPLIST_FILE: NO
