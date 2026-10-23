@@ -21,6 +21,7 @@ jobs:
           for f in topics dependencies questions; do
             curl -fsSL -o upstream/$f.json https://raw.githubusercontent.com/xiaoyang111222/cn-math-taxonomy/main/data/$f.json
           done
+          python3 content/gen_extra.py
           python3 scripts/prep.py upstream Sources/Resources/kgdata.json
 
       - name: Install XcodeGen
