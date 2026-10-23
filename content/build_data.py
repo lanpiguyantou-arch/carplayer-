@@ -11,6 +11,6 @@ def read(f):
     return d
 v=read('slb6s_vocab.txt'); s=read('sentences.txt')
 units=[dict(n=u,t=T[u],w=[dict(e=x.split('|')[0],z=x.split('|')[1]) for x in v[u]],s=s[u]) for u in range(1,9)]
-out=os.path.join(H,'..','app','src','main','assets','slb6s.json')
+out=os.path.join(H,'..','app','src','main','assets','slb6s.json'); os.makedirs(os.path.dirname(out),exist_ok=True)
 json.dump(units,open(out,'w',encoding='utf-8'),ensure_ascii=False)
 print(sum(len(u['w']) for u in units),'words',sum(len(u['s']) for u in units),'sentences')
