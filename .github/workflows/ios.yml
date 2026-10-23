@@ -1,0 +1,45 @@
+name: Build SLB English IPA
+on:
+  push:
+    branches: [slbios]
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Data
+        run: |
+          python3 content/build_data.py
+          mkdir -p ios/Sources/Resources
+          cp app/src/main/assets/slb6s.json ios/Sources/Resources/slb6s.json
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Build
+        run: |
+          set -o pipefail
+          cd ios
+          xcodegen generate
+          xcodebuild -project SLBEnglish.xcodeproj -target SLBEnglish -configuration Release -sdk iphoneos \
+            SYMROOT="$PWD/build" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build 2>&1 | tee ../build.log
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -R ios/build/Release-iphoneos/SLBEnglish.app Payload/
+          zip -qry SLBEnglish6S-unsigned.ipa Payload
+      - name: Publish
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          gh release create "slb-ios-${{ github.run_number }}" SLBEnglish6S-unsigned.ipa --target slbios \
+            --title "陕旅英语六上 iOS ${{ github.run_number }}" --notes "Unsigned IPA. Sign before installing."
+      - name: Report failure
+        if: failure()
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          touch build.log
+          { echo '```'; grep -E "error:|BUILD FAILED" build.log | head -60 || true; echo '```'; } > err.md
+          gh issue create --title "SLB iOS build failed: run ${{ github.run_number }}" --body-file err.md
