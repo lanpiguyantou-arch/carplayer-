@@ -159,6 +159,9 @@ class Prefs(ctx: Context) {
     var zhShowText: Boolean
         get() = sp.getBoolean("zhShowText", false)
         set(v) { sp.edit().putBoolean("zhShowText", v).apply() }
+    var review: String
+        get() = sp.getString("review", "{}") ?: "{}"
+        set(v) { sp.edit().putString("review", v).apply() }
     var showZh: Boolean
         get() = sp.getBoolean("showZh", true)
         set(v) { sp.edit().putBoolean("showZh", v).apply() }
@@ -279,6 +282,12 @@ class MainActivity : Activity() {
             c.setOnClickListener { showUnit(u) }
             body.addView(c, lp(top = 10))
         }
+        val rv = card()
+        val due = dueItems().size
+        rv.addView(text("📅 今日复习（${due}）", 17f, Color.parseColor("#5E35B1"), true))
+        rv.addView(text(if (reviewMap().length() == 0) "按遗忘曲线安排单词和句子复习，先在单元里点“加入复习计划”" else "按遗忘曲线（1、2、4、7、15、30天）安排，点开看计划", 13f, Color.GRAY), lp(top = 4))
+        rv.setOnClickListener { showPlan() }
+        body.addView(rv, lp(top = 14))
         val zd = card()
         zd.addView(text("中译英听写（全册）", 17f, Color.parseColor("#D81B60"), true))
         zd.addView(text("念中文，孩子写英文；可选随机或顺序，可选单元", 13f, Color.GRAY), lp(top = 4))
@@ -327,6 +336,11 @@ class MainActivity : Activity() {
         val self = { showUnit(u) }
         page("Unit ${u.n}", self) { body ->
             body.addView(text(u.title, 20f, bold = true), lp())
+            val inPlan = reviewMap().has("w:" + u.words.first().en)
+            body.addView(button(if (inPlan) "📅 已在复习计划中（查看）" else "📅 学完了，加入遗忘曲线复习计划", Color.parseColor("#5E35B1")) {
+                if (!inPlan) { addToPlan(u); Toast.makeText(this, "已加入：${u.words.size} 个单词 + ${u.sentences.size} 个句子，明天开始复习", Toast.LENGTH_LONG).show() }
+                showPlan()
+            }, lp(top = 14))
             body.addView(button("📖 课文点读（${u.textTitle}，带翻译）", Color.parseColor("#00897B")) { showPointRead("Unit ${u.n} 课文", u.textTitle, u.text) }, lp(top = 14))
             body.addView(button("① 单词表（点读）") { showWords(u.words, "Unit ${u.n} 单词") }, lp())
             body.addView(button("② 重点句（正常 / 慢速 / 循环跟读）") { showSentences(u) }, lp())
@@ -484,6 +498,114 @@ class MainActivity : Activity() {
                     input.requestFocus()
                     (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(input, 0)
                     Handler(Looper.getMainLooper()).postDelayed({ speaker.speak(w.en) }, 400)
+                }
+            }
+            render()
+        }
+    }
+
+    // ---------- 遗忘曲线复习
+    private val curve = intArrayOf(1, 2, 4, 7, 15, 30)
+    private fun today() = (System.currentTimeMillis() + java.util.TimeZone.getDefault().getOffset(System.currentTimeMillis())) / 86400000L
+    private fun reviewMap(): org.json.JSONObject = try { org.json.JSONObject(prefs.review) } catch (_: Exception) { org.json.JSONObject() }
+    private fun addToPlan(u: Lesson) {
+        val m = reviewMap(); val t = today()
+        u.words.forEach { if (!m.has("w:" + it.en)) m.put("w:" + it.en, org.json.JSONObject().put("st", 0).put("d", t + 1).put("u", u.n)) }
+        u.sentences.forEach { if (!m.has("s:" + it.en)) m.put("s:" + it.en, org.json.JSONObject().put("st", 0).put("d", t + 1).put("u", u.n)) }
+        prefs.review = m.toString()
+    }
+    data class RItem(val key: String, val en: String, val zh: String, val isWord: Boolean, val unit: Int)
+    private fun lookup(key: String, unit: Int): RItem? {
+        val u = units.firstOrNull { it.n == unit } ?: return null
+        val en = key.substring(2)
+        return if (key.startsWith("w:")) u.words.firstOrNull { it.en == en }?.let { RItem(key, it.en, it.zh, true, unit) }
+        else u.sentences.firstOrNull { it.en == en }?.let { RItem(key, it.en, it.zh, false, unit) }
+    }
+    private fun dueItems(): List<RItem> {
+        val m = reviewMap(); val t = today()
+        return m.keys().asSequence().filter { m.getJSONObject(it).getLong("d") <= t && m.getJSONObject(it).getInt("st") < curve.size }
+            .mapNotNull { lookup(it, m.getJSONObject(it).getInt("u")) }.sortedBy { if (it.isWord) 0 else 1 }.toList()
+    }
+    private fun grade(key: String, ok: Boolean) {
+        val m = reviewMap(); val o = m.optJSONObject(key) ?: return
+        val st = if (ok) o.getInt("st") + 1 else 0
+        o.put("st", st)
+        o.put("d", today() + when { !ok -> 1; st >= curve.size -> 9999; else -> curve[st] })
+        prefs.review = m.toString()
+    }
+
+    private fun showPlan(): Unit {
+        val self = { showPlan() }
+        page("遗忘曲线复习计划", self) { body ->
+            val m = reviewMap(); val t = today()
+            if (m.length() == 0) {
+                body.addView(text("还没有内容。进入任意单元，点“学完了，加入遗忘曲线复习计划”。", 15f, Color.GRAY), lp())
+                units.forEach { u -> body.addView(button("加入 Unit ${u.n} ${u.title}", Color.parseColor("#5E35B1")) { addToPlan(u); back.removeAt(back.size - 1); showPlan() }, lp()) }
+                return@page
+            }
+            val due = dueItems()
+            val dw = due.count { it.isWord }; val ds = due.size - dw
+            val c = card()
+            c.addView(text("今天要复习：单词 $dw 个，句子 $ds 句", 18f, Color.parseColor("#5E35B1"), true))
+            c.addView(text("记得的会隔 1→2→4→7→15→30 天再出现，忘了的明天重来。", 13f, Color.GRAY), lp(top = 4))
+            body.addView(c, lp())
+            if (due.isNotEmpty()) body.addView(button("▶ 开始今日复习", Color.parseColor("#5E35B1")) { showReview(due) }, lp(top = 10))
+            else body.addView(text("今天的复习已完成 👍", 16f, green, true), lp(top = 10))
+            body.addView(text("未来 7 天计划", 17f, bold = true), lp(top = 18))
+            val keys = m.keys().asSequence().toList()
+            for (k in 1..7) {
+                val day = t + k
+                val list = keys.filter { m.getJSONObject(it).getLong("d") == day }
+                val w = list.count { it.startsWith("w:") }
+                val cal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.DAY_OF_YEAR, k) }
+                val label = "${cal.get(java.util.Calendar.MONTH) + 1}月${cal.get(java.util.Calendar.DAY_OF_MONTH)}日" + (if (k == 1) "（明天）" else "")
+                body.addView(text("$label：单词 $w · 句子 ${list.size - w}", 15f), lp(top = 6))
+            }
+            body.addView(text("各单元掌握情况", 17f, bold = true), lp(top = 18))
+            units.forEach { u ->
+                val ks = keys.filter { m.getJSONObject(it).getInt("u") == u.n }
+                if (ks.isEmpty()) {
+                    body.addView(button("加入 Unit ${u.n} ${u.title}", Color.GRAY) { addToPlan(u); back.removeAt(back.size - 1); showPlan() }, lp())
+                } else {
+                    val done = ks.count { m.getJSONObject(it).getInt("st") >= curve.size }
+                    val avg = ks.sumOf { m.getJSONObject(it).getInt("st") } * 100 / (ks.size * curve.size)
+                    body.addView(text("Unit ${u.n}：进度 $avg%，已牢记 $done / ${ks.size}", 15f), lp(top = 6))
+                }
+            }
+            body.addView(button("清空复习计划", red) {
+                android.app.AlertDialog.Builder(this).setMessage("清空全部复习进度？").setPositiveButton("清空") { _, _ -> prefs.review = "{}"; back.removeAt(back.size - 1); showPlan() }.setNegativeButton("取消", null).show()
+            }, lp(top = 20))
+        }
+    }
+
+    private fun showReview(items: List<RItem>): Unit {
+        var i = 0; var ok = 0
+        lateinit var render: () -> Unit
+        val self = { showReview(items) }
+        page("今日复习", self) { body ->
+            val holder = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            body.addView(holder, lp())
+            render = {
+                holder.removeAllViews()
+                if (i >= items.size) {
+                    holder.addView(text("今日复习完成！记得 $ok / ${items.size}", 22f, green, true), lp(top = 30))
+                    holder.addView(text("忘了的明天会再出现。", 15f, Color.GRAY), lp(top = 8))
+                } else {
+                    val it0 = items[i]
+                    holder.addView(text("${i + 1} / ${items.size} · " + (if (it0.isWord) "单词" else "句子") + " · Unit ${it0.unit}", 15f, Color.DKGRAY), lp())
+                    holder.addView(text(it0.zh, if (it0.isWord) 26f else 20f, Color.parseColor("#5E35B1"), true), lp(top = 12))
+                    holder.addView(text("先想（或说/写）出英文，再看答案", 13f, Color.GRAY), lp(top = 6))
+                    val ans = text(it0.en, if (it0.isWord) 26f else 20f, Color.parseColor("#0D47A1"), true)
+                    ans.visibility = View.INVISIBLE
+                    holder.addView(ans, lp(top = 14))
+                    val judge = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; visibility = View.GONE }
+                    judge.addView(button("✓ 记得", green) { grade(it0.key, true); ok++; i++; render() }, LinearLayout.LayoutParams(0, -2, 1f))
+                    judge.addView(button("✗ 忘了", red) { grade(it0.key, false); if (it0.isWord) prefs.wrong = prefs.wrong + it0.en; i++; render() }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+                    lateinit var show: Button
+                    show = button("👀 看答案并发音") { ans.visibility = View.VISIBLE; speaker.speak(it0.en); show.visibility = View.GONE; judge.visibility = View.VISIBLE }
+                    holder.addView(show, lp(top = 12))
+                    holder.addView(judge, lp(top = 8))
+                    holder.addView(button("🔊 再听一遍", Color.GRAY) { speaker.speak(it0.en) }, lp(top = 8))
                 }
             }
             render()
