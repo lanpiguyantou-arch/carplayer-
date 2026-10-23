@@ -71,7 +71,7 @@ final class Library: ObservableObject {
         let access = src.startAccessingSecurityScopedResource()
         defer { if access { src.stopAccessingSecurityScopedResource() } }
         let ext = src.pathExtension.lowercased()
-        if ext == "m3u" || ext == "txt" {
+        if ext == "m3u" || ext == "txt" || (ext == "m3u8" && Library.readText(src).flatMap(PlaylistParser.channelList) != nil) {
             if let text = Library.readText(src) {
                 let parsed = PlaylistParser.parse(text)
                 merge(parsed)
@@ -99,20 +99,71 @@ final class Library: ObservableObject {
     func addRemote(name: String, url raw: String, group: String) {
         let s = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let url = URL(string: s), url.scheme != nil else { lastMessage = "链接格式不对"; return }
-        // A link to a playlist (m3u/txt) is treated as a subscription
-        let ext = url.pathExtension.lowercased()
-        if ext == "m3u" || ext == "txt" {
-            subscribe(url)
-            return
-        }
         var title = name.trimmingCharacters(in: .whitespaces)
         if title.isEmpty {
             let n = url.deletingPathExtension().lastPathComponent
             title = n.isEmpty || n == "/" ? (url.host ?? s) : n
         }
         let g = group.trimmingCharacters(in: .whitespaces)
-        remoteItems.append(MediaItem(url: url, title: title, isRemote: true, group: g.isEmpty ? nil : g, logo: nil))
-        saveRemote()
+        let single = MediaItem(url: url, title: title, isRemote: true, group: g.isEmpty ? nil : g, logo: nil)
+        let videoExts: Set<String> = ["mp4", "m4v", "mov", "3gp", "mp3", "m4a", "aac", "flac", "wav", "flv", "ts"]
+        if videoExts.contains(url.pathExtension.lowercased()) {
+            remoteItems.append(single)
+            saveRemote()
+            return
+        }
+        // Could be a channel list (m3u / m3u8 / txt / no extension): look inside first
+        lastMessage = "正在识别链接…"
+        Library.fetchChannels(url) { [weak self] channels in
+            guard let self = self else { return }
+            if let channels = channels, !channels.isEmpty {
+                self.merge(channels)
+                self.lastMessage = "识别为频道列表，导入了 \(channels.count) 个频道"
+            } else {
+                self.remoteItems.append(single)
+                self.saveRemote()
+                self.lastMessage = "已添加 \(title)"
+            }
+        }
+    }
+
+    /// Downloads url; returns channels if the content is a channel list, nil if it is a real stream / video.
+    static func fetchChannels(_ url: URL, completion: @escaping ([MediaItem]?) -> Void) {
+        var req = URLRequest(url: url, timeoutInterval: 20)
+        req.setValue("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)", forHTTPHeaderField: "User-Agent")
+        URLSession.shared.dataTask(with: req) { data, response, _ in
+            var result: [MediaItem]?
+            if let data = data, data.count < 20_000_000,
+               let text = Library.decode(data) {
+                result = PlaylistParser.channelList(text)
+            }
+            DispatchQueue.main.async { completion(result) }
+        }.resume()
+    }
+
+    static func decode(_ data: Data) -> String? {
+        let gb = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)))
+        return String(data: data, encoding: .utf8) ?? String(data: data, encoding: gb)
+    }
+
+    /// Tapping an old item that is really a channel list expands it into channels instead of playing.
+    func resolve(_ item: MediaItem, completion: @escaping (MediaItem?) -> Void) {
+        guard item.isRemote else { completion(item); return }
+        let ext = item.url.pathExtension.lowercased()
+        guard ["m3u", "m3u8", "txt", ""].contains(ext) || item.url.query != nil else { completion(item); return }
+        lastMessage = "正在识别…"
+        Library.fetchChannels(item.url) { [weak self] channels in
+            guard let self = self else { return }
+            if let channels = channels, !channels.isEmpty {
+                self.remoteItems.removeAll { $0 == item }
+                self.merge(channels)
+                self.lastMessage = "已展开为 \(channels.count) 个频道"
+                completion(nil)
+            } else {
+                self.lastMessage = nil
+                completion(item)
+            }
+        }
     }
 
     /// Download an m3u / txt (DIYP) channel list and add its channels grouped by 台/分组.
@@ -125,9 +176,7 @@ final class Library: ObservableObject {
                     self.lastMessage = "读取失败：\(error?.localizedDescription ?? "无数据")"
                     return
                 }
-                let gb = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.GB_18030_2000.rawValue)))
-                let text = String(data: data, encoding: .utf8) ?? String(data: data, encoding: gb) ?? ""
-                let parsed = PlaylistParser.parse(text)
+                let parsed = PlaylistParser.channelList(Library.decode(data) ?? "") ?? []
                 if parsed.isEmpty {
                     // Not a list: treat as a single stream
                     self.remoteItems.append(MediaItem(url: url, title: url.lastPathComponent, isRemote: true, group: nil, logo: nil))
@@ -172,6 +221,13 @@ final class Library: ObservableObject {
 }
 
 enum PlaylistParser {
+    /// Channel list if the text is one (not an HLS stream playlist), else nil.
+    static func channelList(_ text: String) -> [MediaItem]? {
+        if text.contains("#EXT-X-") { return nil }   // HLS stream, play directly
+        let items = parse(text)
+        return items.isEmpty ? nil : items
+    }
+
     /// Supports #EXTM3U (group-title / tvg-name / tvg-logo) and the DIYP txt format ("央视,#genre#" then "CCTV1,http://...").
     static func parse(_ content: String) -> [MediaItem] {
         let lines = content.replacingOccurrences(of: "\r\n", with: "\n")
