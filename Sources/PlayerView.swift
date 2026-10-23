@@ -65,29 +65,51 @@ struct PlayerView: View {
             }
             .padding(.horizontal, 20)
             .allowsHitTesting(false)
+            if let status = model.statusText {
+                VStack(spacing: 10) {
+                    if status.hasPrefix("正在") { ProgressView().tint(.white) }
+                    Text(status).foregroundColor(.white).multilineTextAlignment(.center).padding(.horizontal, 30)
+                }
+                .allowsHitTesting(false)
+            }
             if showControls {
                 controls
                     .transition(.opacity)
             }
         }
         .statusBarHidden(!showControls)
+        .gesture(DragGesture(minimumDistance: 30).onEnded { v in
+            if v.translation.height > 120 || v.translation.width > 120 { close() }
+        })
+    }
+
+    private func close() {
+        model.stop()
+        dismiss()
     }
 
     private var controls: some View {
         VStack {
-            HStack(spacing: 16) {
+            HStack(spacing: 10) {
                 Button {
-                    model.stop()
-                    dismiss()
+                    close()
                 } label: {
-                    Image(systemName: "chevron.down.circle.fill").font(.system(size: 40))
+                    HStack(spacing: 4) {
+                        Image(systemName: "chevron.left")
+                        Text("返回")
+                    }
+                    .font(.headline)
+                    .padding(.horizontal, 12)
+                    .frame(height: 44)
+                    .background(Color.white.opacity(0.2))
+                    .cornerRadius(10)
                 }
-                Spacer()
+                .layoutPriority(2)
                 Text(model.current?.title ?? "")
                     .font(.headline)
                     .lineLimit(1)
-                Spacer()
-                RoutePicker().frame(width: 44, height: 44)
+                    .frame(maxWidth: .infinity)
+                RoutePicker().frame(width: 44, height: 44).layoutPriority(2)
                 Menu {
                     ForEach(PlayerModel.rates, id: \.self) { r in
                         Button { model.setRate(r) } label: { Text(String(format: "%gx", r)) }
@@ -95,17 +117,20 @@ struct PlayerView: View {
                 } label: {
                     Text(String(format: "%gx", model.rate))
                         .font(.title3.bold())
-                        .frame(width: 70, height: 44)
+                        .frame(width: 56, height: 44)
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(10)
                 }
             }
-            .padding(.horizontal, 24)
-            .padding(.top, 12)
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
 
             Spacer()
 
             VStack(spacing: 10) {
+                if model.isLive {
+                    Text("● 直播").font(.subheadline.bold()).foregroundColor(.red)
+                } else {
                 HStack(spacing: 12) {
                     Text(fmt(scrubbing ? scrubValue : model.currentTime))
                     Slider(
@@ -126,14 +151,16 @@ struct PlayerView: View {
                     Text(fmt(model.duration))
                 }
                 .font(.caption.monospacedDigit())
-
-                HStack(spacing: 40) {
-                    bigButton("backward.end.fill", 30) { model.previous() }
-                    bigButton("gobackward.10", 34) { model.seek(by: -10) }
-                    bigButton(model.isPlaying ? "pause.circle.fill" : "play.circle.fill", 64) { model.toggle() }
-                    bigButton("goforward.10", 34) { model.seek(by: 10) }
-                    bigButton("forward.end.fill", 30) { model.next() }
                 }
+
+                HStack(spacing: 0) {
+                    bigButton("backward.end.fill", 28) { model.previous() }
+                    bigButton("gobackward.10", 30) { model.seek(by: -10) }
+                    bigButton(model.isPlaying ? "pause.circle.fill" : "play.circle.fill", 60) { model.toggle() }
+                    bigButton("goforward.10", 30) { model.seek(by: 10) }
+                    bigButton("forward.end.fill", 28) { model.next() }
+                }
+                .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 16)
@@ -151,7 +178,7 @@ struct PlayerView: View {
         Button(action: action) {
             Image(systemName: name)
                 .font(.system(size: size))
-                .frame(width: max(size * 1.4, 56), height: max(size * 1.4, 56))
+                .frame(minWidth: 44, maxWidth: .infinity, minHeight: 56)
                 .contentShape(Rectangle())
         }
     }
