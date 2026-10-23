@@ -6,7 +6,7 @@ struct CarPlayerApp: App {
     @StateObject private var library = Library.shared
 
     init() {
-        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback)
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .moviePlayback, policy: .longFormVideo)
         try? AVAudioSession.sharedInstance().setActive(true)
     }
 
