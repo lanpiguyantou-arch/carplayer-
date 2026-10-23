@@ -13,6 +13,9 @@ final class PlayerModel: ObservableObject {
     @Published var rate: Float = 1.0
     @Published var currentTime: Double = 0
     @Published var duration: Double = 0
+    @Published var statusText: String?
+    var isLive: Bool { current?.isRemote == true && !(duration.isFinite && duration > 0) }
+    private var statusObs: NSKeyValueObservation?
 
     private var cues: [SubtitleCue] = []
     private var queue: [MediaItem] = []
@@ -35,6 +38,16 @@ final class PlayerModel: ObservableObject {
         duration = 0
         let playerItem = AVPlayerItem(url: item.url)
         player.replaceCurrentItem(with: playerItem)
+        statusText = item.isRemote ? "正在连接…" : nil
+        statusObs = playerItem.observe(\.status, options: [.new]) { [weak self] it, _ in
+            DispatchQueue.main.async {
+                switch it.status {
+                case .readyToPlay: self?.statusText = nil
+                case .failed: self?.statusText = "这个频道播放失败，源可能已失效，换一个试试\n\(it.error?.localizedDescription ?? "")"
+                default: break
+                }
+            }
+        }
         loadSubtitles(for: item)
         if let o = endObserver { NotificationCenter.default.removeObserver(o) }
         endObserver = NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: playerItem, queue: .main) { [weak self] _ in
@@ -59,6 +72,7 @@ final class PlayerModel: ObservableObject {
     func stop() {
         player.pause()
         isPlaying = false
+        statusText = nil
         updateNowPlaying()
     }
 
