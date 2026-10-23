@@ -20,6 +20,8 @@ final class PlayerModel: ObservableObject {
     private var endObserver: NSObjectProtocol?
 
     init() {
+        player.allowsExternalPlayback = true
+        player.usesExternalPlaybackWhileExternalScreenIsActive = true
         timeObserver = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.25, preferredTimescale: 600), queue: .main) { [weak self] t in
             self?.tick(t.seconds)
         }
