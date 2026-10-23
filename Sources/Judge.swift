@@ -5,7 +5,7 @@ enum Verdict { case correct, wrong, manual }
 enum Judge {
     static func normalize(_ s: String) -> String {
         var r = s.trimmingCharacters(in: .whitespacesAndNewlines)
-        let map: [String: String] = ["，": ",", "、": ",", "；": ",", ";": ",", "（": "(", "）": ")", "－": "-", "−": "-", "＋": "+", "／": "/", "＝": "=", "。": "", "：": ":", "％": "%", "×": "*", "÷": "/", "　": " "]
+        let map: [String: String] = ["，": ",", "、": ",", "；": ",", ";": ",", "（": "(", "）": ")", "－": "-", "−": "-", "＋": "+", "／": "/", "＝": "=", "’": "'", "‘": "'", "“": "", "”": "", "《": "", "》": "", "？": "", "！": "", "。": "", "：": ":", "％": "%", "×": "*", "÷": "/", "　": " "]
         for (k, v) in map { r = r.replacingOccurrences(of: k, with: v) }
         // full-width digits/letters
         r = r.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? r
@@ -35,6 +35,10 @@ enum Judge {
         guard !u.isEmpty else { return .wrong }
         var refs = [q.a] + (q.ac ?? [])
         refs = refs.map(normalize)
+        if q.ty == "spell" {
+            let strip: (String) -> String = { $0.trimmingCharacters(in: CharacterSet(charactersIn: ".!?")) }
+            return refs.contains { strip($0) == strip(u) } ? .correct : .wrong
+        }
         for r in refs {
             if q.pc == true {
                 if same(u.replacingOccurrences(of: "%", with: ""), r.replacingOccurrences(of: "%", with: "")) { return .correct }
