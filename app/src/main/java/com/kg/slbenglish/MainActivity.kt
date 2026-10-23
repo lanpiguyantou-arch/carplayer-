@@ -57,11 +57,36 @@ class Speaker(private val ctx: Context, private val prefs: Prefs) {
         if (prefs.engine == 0) playOnline(text, rate) else playTts(text, rate)
     }
 
+    // 念中文（中译英听写）：百度中文朗读，失败用系统中文语音
+    fun speakZh(text: String) {
+        stop()
+        val t = text.replace(Regex("[（(][^）)]*[）)]"), "").replace("；", "，").replace(";", "，")
+        val url = "https://fanyi.baidu.com/gettts?lan=zh&text=" + URLEncoder.encode(t, "UTF-8").replace("+", "%20") + "&spd=4&source=web"
+        try {
+            val mp = MediaPlayer(); player = mp
+            mp.setAudioAttributes(AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).build())
+            mp.setDataSource(url)
+            mp.setOnPreparedListener { it.start() }
+            mp.setOnCompletionListener { onDone?.invoke() }
+            mp.setOnErrorListener { _, _, _ -> main.post { if (player === mp) zhTts(t) }; true }
+            mp.prepareAsync()
+        } catch (_: Exception) { zhTts(t) }
+    }
+    private fun zhTts(t: String) {
+        val r = tts?.setLanguage(Locale.CHINESE) ?: TextToSpeech.LANG_NOT_SUPPORTED
+        if (r == TextToSpeech.LANG_MISSING_DATA || r == TextToSpeech.LANG_NOT_SUPPORTED) {
+            Toast.makeText(ctx, "中文朗读失败，请检查网络", Toast.LENGTH_SHORT).show(); return
+        }
+        tts?.setSpeechRate(0.9f)
+        tts?.speak(t, TextToSpeech.QUEUE_FLUSH, null, "z" + System.nanoTime())
+    }
+
     private fun playTts(text: String, rate: Float) {
         if (!ttsReady) {
             Toast.makeText(ctx, "本机没有英文语音引擎，已改用在线真人发音", Toast.LENGTH_SHORT).show()
             playOnline(text, rate, fallback = false); return
         }
+        tts?.setLanguage(Locale.US)
         tts?.setSpeechRate(rate)
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "u" + System.nanoTime())
     }
@@ -128,6 +153,12 @@ class Prefs(ctx: Context) {
     var wrong: Set<String>
         get() = sp.getStringSet("wrong", emptySet()) ?: emptySet()
         set(v) { sp.edit().putStringSet("wrong", HashSet(v)).apply() }
+    var zhRandom: Boolean
+        get() = sp.getBoolean("zhRandom", true)
+        set(v) { sp.edit().putBoolean("zhRandom", v).apply() }
+    var zhShowText: Boolean
+        get() = sp.getBoolean("zhShowText", false)
+        set(v) { sp.edit().putBoolean("zhShowText", v).apply() }
     var showZh: Boolean
         get() = sp.getBoolean("showZh", true)
         set(v) { sp.edit().putBoolean("showZh", v).apply() }
@@ -248,6 +279,11 @@ class MainActivity : Activity() {
             c.setOnClickListener { showUnit(u) }
             body.addView(c, lp(top = 10))
         }
+        val zd = card()
+        zd.addView(text("中译英听写（全册）", 17f, Color.parseColor("#D81B60"), true))
+        zd.addView(text("念中文，孩子写英文；可选随机或顺序，可选单元", 13f, Color.GRAY), lp(top = 4))
+        zd.setOnClickListener { showZhPick() }
+        body.addView(zd, lp(top = 14))
         val mt = card()
         mt.addView(text("我的课文（自己添加）", 17f, Color.parseColor("#00897B"), true))
         mt.addView(text("粘贴课本里的英文，自动分句、点读、翻译", 13f, Color.GRAY), lp(top = 4))
@@ -296,6 +332,7 @@ class MainActivity : Activity() {
             body.addView(button("② 重点句（正常 / 慢速 / 循环跟读）") { showSentences(u) }, lp())
             body.addView(button("③ 记忆卡片（看中文想英文）", green) { showCards(u.words.shuffled(), "Unit ${u.n} 卡片", u.n) }, lp())
             body.addView(button("④ 听音拼写（听写）", Color.parseColor("#FB8C00")) { showDictation(u.words.shuffled(), "Unit ${u.n} 听写", u.n) }, lp())
+            body.addView(button("⑥ 中译英听写（念中文写英文）", Color.parseColor("#D81B60")) { showZhSetup(u.words, "Unit ${u.n} 中译英听写", u.n) }, lp())
             body.addView(button("⑤ 连续播放全部单词", Color.parseColor("#8E24AA")) { playAll(u.words.map { it.en }) }, lp())
         }
     }
@@ -447,6 +484,121 @@ class MainActivity : Activity() {
                     input.requestFocus()
                     (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(input, 0)
                     Handler(Looper.getMainLooper()).postDelayed({ speaker.speak(w.en) }, 400)
+                }
+            }
+            render()
+        }
+    }
+
+    // ---------- 中译英听写
+    private fun showZhPick(): Unit {
+        val self = { showZhPick() }
+        page("中译英听写 · 选单元", self) { body ->
+            val checks = units.map { u -> CheckBox(this).apply { text = "Unit ${u.n}  ${u.title}（${u.words.size} 词）"; textSize = 16f; isChecked = true } }
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            row.addView(button("全选", Color.GRAY) { checks.forEach { it.isChecked = true } }, LinearLayout.LayoutParams(0, -2, 1f))
+            row.addView(button("全不选", Color.GRAY) { checks.forEach { it.isChecked = false } }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            body.addView(row, lp())
+            checks.forEach { body.addView(it, lp(top = 2)) }
+            body.addView(button("下一步", Color.parseColor("#D81B60")) {
+                val ws = units.filterIndexed { i, _ -> checks[i].isChecked }.flatMap { it.words }
+                if (ws.isEmpty()) Toast.makeText(this, "至少选一个单元", Toast.LENGTH_SHORT).show()
+                else showZhSetup(ws, "中译英听写", 0)
+            }, lp(top = 12))
+        }
+    }
+
+    private fun showZhSetup(words: List<Word>, title: String, unitN: Int): Unit {
+        if (words.isEmpty()) { Toast.makeText(this, "没有单词", Toast.LENGTH_SHORT).show(); return }
+        val self = { showZhSetup(words, title, unitN) }
+        page(title, self) { body ->
+            body.addView(text("共 ${words.size} 个单词/短语", 16f, Color.DKGRAY), lp())
+            body.addView(text("出题顺序", 17f, bold = true), lp(top = 16))
+            val rg = RadioGroup(this).apply { orientation = RadioGroup.HORIZONTAL }
+            val rRand = RadioButton(this).apply { text = "随机模式"; textSize = 17f; id = View.generateViewId() }
+            val rSeq = RadioButton(this).apply { text = "顺序模式"; textSize = 17f; id = View.generateViewId() }
+            rg.addView(rRand); rg.addView(rSeq)
+            rg.check(if (prefs.zhRandom) rRand.id else rSeq.id)
+            rg.setOnCheckedChangeListener { _, id -> prefs.zhRandom = id == rRand.id }
+            body.addView(rg, lp())
+            val show = CheckBox(this).apply { text = "屏幕上也显示中文（不勾选就只听不看）"; textSize = 15f; isChecked = prefs.zhShowText
+                setOnCheckedChangeListener { _, b -> prefs.zhShowText = b } }
+            body.addView(show, lp(top = 10))
+            body.addView(text("可以在手机上输入英文自动判对错，也可以写在纸上，点“看答案”后自己判。", 13f, Color.GRAY), lp(top = 10))
+            body.addView(button("开始听写", Color.parseColor("#D81B60")) {
+                showZhDictation(if (prefs.zhRandom) words.shuffled() else words, title, unitN)
+            }, lp(top = 16))
+        }
+    }
+
+    private fun showZhDictation(words: List<Word>, title: String, unitN: Int): Unit {
+        var i = 0; var right = 0
+        val wrongList = ArrayList<Word>()
+        lateinit var render: () -> Unit
+        val self = { showZhDictation(words, title, unitN) }
+        page(title + if (prefs.zhRandom) "（随机）" else "（顺序）", self) { body ->
+            val holder = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+            body.addView(holder, lp())
+            render = {
+                holder.removeAllViews()
+                if (i >= words.size) {
+                    holder.addView(text("听写完成！写对 $right / ${words.size}", 22f, green, true), lp(top = 30))
+                    if (wrongList.isNotEmpty()) {
+                        holder.addView(text("写错的：", 16f, red, true), lp(top = 14))
+                        wrongList.forEach { holder.addView(text("${it.en}   ${it.zh}", 16f), lp(top = 4)) }
+                        holder.addView(button("只练写错的", red) { showZhDictation(ArrayList(wrongList), title, 0) }, lp(top = 14))
+                    }
+                    holder.addView(button("再来一遍") { showZhDictation(if (prefs.zhRandom) words.shuffled() else words, title, unitN) }, lp(top = 10))
+                } else {
+                    val w = words[i]
+                    var revealed = false
+                    holder.addView(text("第 ${i + 1} / ${words.size} 个", 16f, Color.DKGRAY), lp())
+                    val zhText = text(w.zh, 26f, Color.parseColor("#D81B60"), true)
+                    zhText.visibility = if (prefs.zhShowText) View.VISIBLE else View.GONE
+                    holder.addView(zhText, lp(top = 10))
+                    val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+                    row.addView(button("🔊 再念一遍中文") { speaker.speakZh(w.zh) }, LinearLayout.LayoutParams(0, -2, 1f))
+                    row.addView(button("👀 看中文", Color.GRAY) { zhText.visibility = View.VISIBLE }, LinearLayout.LayoutParams(0, -2, 0.7f).apply { leftMargin = dp(8) })
+                    holder.addView(row, lp(top = 10))
+                    val input = EditText(this).apply {
+                        hint = "输入英文（写在纸上可以不填）"; textSize = 20f; isSingleLine = true
+                        inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                        imeOptions = EditorInfo.IME_ACTION_DONE
+                        background = round(Color.WHITE, 10, Color.LTGRAY); setPadding(dp(12), dp(10), dp(12), dp(10))
+                    }
+                    holder.addView(input, lp(top = 14))
+                    val result = text("", 20f, bold = true)
+                    holder.addView(result, lp(top = 10))
+                    val judge = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; visibility = View.GONE }
+                    lateinit var action: Button
+                    fun next() { i++; render() }
+                    judge.addView(button("✓ 写对了", green) { right++; prefs.wrong = prefs.wrong - w.en; next() }, LinearLayout.LayoutParams(0, -2, 1f))
+                    judge.addView(button("✗ 写错了", red) { wrongList.add(w); prefs.wrong = prefs.wrong + w.en; next() }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+                    val reveal = {
+                        if (!revealed) {
+                            revealed = true
+                            zhText.visibility = View.VISIBLE
+                            val typed = input.text.toString()
+                            speaker.speak(w.en)
+                            if (typed.isBlank()) {
+                                result.setTextColor(Color.parseColor("#0D47A1")); result.text = "答案：${w.en}"
+                                judge.visibility = View.VISIBLE; action.visibility = View.GONE
+                            } else if (norm(typed) == norm(w.en)) {
+                                right++; prefs.wrong = prefs.wrong - w.en
+                                result.setTextColor(green); result.text = "✓ 正确：${w.en}"
+                                action.text = if (i + 1 >= words.size) "看结果" else "下一个"
+                            } else {
+                                wrongList.add(w); prefs.wrong = prefs.wrong + w.en
+                                result.setTextColor(red); result.text = "✗ 正确：${w.en}\n你写的：$typed"
+                                action.text = if (i + 1 >= words.size) "看结果" else "下一个"
+                            }
+                        } else next()
+                    }
+                    action = button("提交 / 看答案", Color.parseColor("#D81B60")) { reveal() }
+                    input.setOnEditorActionListener { _, _, _ -> reveal(); true }
+                    holder.addView(action, lp(top = 10))
+                    holder.addView(judge, lp(top = 10))
+                    Handler(Looper.getMainLooper()).postDelayed({ speaker.speakZh(w.zh) }, 400)
                 }
             }
             render()
@@ -608,6 +760,7 @@ class MainActivity : Activity() {
             if (list.isEmpty()) { body.addView(text("太棒了，还没有错词。", 18f), lp(top = 20)); return@page }
             body.addView(button("错词卡片复习", green) { showCards(list.shuffled(), "错词卡片", 0) }, lp())
             body.addView(button("错词听写", Color.parseColor("#FB8C00")) { showDictation(list.shuffled(), "错词听写", 0) }, lp())
+            body.addView(button("错词中译英听写", Color.parseColor("#D81B60")) { showZhSetup(list, "错词中译英听写", 0) }, lp())
             body.addView(button("清空错词本", red) { prefs.wrong = emptySet(); back.removeAt(back.size - 1); showWrong() }, lp())
             for (w in list) {
                 val row = card()
