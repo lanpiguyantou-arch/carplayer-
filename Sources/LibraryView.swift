@@ -15,67 +15,119 @@ struct LibraryView: View {
     @State private var groupText = ""
     @State private var subText = ""
     @State private var showPlayer = false
-    @State private var collapsed: Set<String> = []
+    @State private var tab = 0
+    @State private var selectedGroup: String?
+    private let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
+
+    private var currentGroupName: String? {
+        let names = library.remoteGroups.map { $0.name }
+        if let s = selectedGroup, names.contains(s) { return s }
+        return names.first
+    }
+
+    @ViewBuilder private var liveView: some View {
+        if library.remoteItems.isEmpty {
+            VStack(spacing: 12) {
+                Spacer()
+                Image(systemName: "tv").font(.system(size: 50)).foregroundColor(.secondary)
+                Text("点右上角 + →「订阅频道列表」\n粘贴 m3u / txt 直播源地址").multilineTextAlignment(.center).foregroundColor(.secondary)
+                Spacer()
+            }
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(library.remoteGroups, id: \.name) { g in
+                        let on = g.name == currentGroupName
+                        Text(g.name)
+                            .font(.headline)
+                            .padding(.horizontal, 18).padding(.vertical, 9)
+                            .background(on ? Color.green : Color(white: 0.17))
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                            .onTapGesture { selectedGroup = g.name }
+                            .contextMenu {
+                                Button(role: .destructive) { library.deleteGroup(g.name) } label: { Label("删除这个分组", systemImage: "trash") }
+                            }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.vertical, 8)
+            }
+            ScrollView {
+                let items = library.remoteGroups.first { $0.name == currentGroupName }?.items ?? []
+                LazyVGrid(columns: columns, spacing: 18) {
+                    ForEach(items) { item in
+                        Button { open(item, queue: items) } label: { card(item) }
+                            .buttonStyle(.plain)
+                            .contextMenu {
+                                Button(role: .destructive) { library.delete(item) } label: { Label("删除频道", systemImage: "trash") }
+                            }
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 30)
+            }
+        }
+    }
+
+    private var localView: some View {
+        List {
+            if library.localItems.isEmpty {
+                Text("点右上角 + 从相册或文件导入；同名 .srt 字幕会自动显示。")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+            }
+            ForEach(library.localItems) { item in
+                row(item, queue: library.localItems)
+            }
+            .onDelete { offsets in
+                let items = offsets.map { library.localItems[$0] }
+                items.forEach { library.delete($0) }
+            }
+        }
+    }
+
+    private func card(_ item: MediaItem) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10).fill(Color(white: 0.13))
+                if let logo = item.logo, let u = URL(string: logo) {
+                    AsyncImage(url: u) { img in img.resizable().scaledToFit().padding(18) }
+                        placeholder: { Image(systemName: "tv").font(.system(size: 44)).foregroundColor(.white) }
+                } else {
+                    Image(systemName: "tv").font(.system(size: 44)).foregroundColor(.white)
+                }
+            }
+            .aspectRatio(16.0/9.0, contentMode: .fit)
+            Text(item.title).font(.headline).foregroundColor(.white).lineLimit(1)
+        }
+    }
+
+    private func open(_ item: MediaItem, queue: [MediaItem]) {
+        library.resolve(item) { resolved in
+            guard let resolved = resolved else { return }
+            PlayerModel.shared.play(resolved, queue: queue)
+            showPlayer = true
+        }
+    }
 
     var body: some View {
         NavigationStack {
-            List {
+            VStack(spacing: 0) {
+                Picker("", selection: $tab) {
+                    Text("直播 / 电视台").tag(0)
+                    Text("本地视频").tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal)
+                .padding(.bottom, 6)
                 if importing {
-                    HStack { ProgressView(); Text("正在从相册导入…") }
+                    HStack { ProgressView(); Text("正在从相册导入…") }.padding(4)
                 }
                 if let msg = library.lastMessage {
-                    Text(msg).font(.footnote).foregroundColor(.secondary)
+                    Text(msg).font(.footnote).foregroundColor(.secondary).padding(4)
                 }
-                Section("本地视频") {
-                    if library.localItems.isEmpty {
-                        Text("点右上角 + 从相册或文件导入；同名 .srt 字幕会自动显示。")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                    }
-                    ForEach(library.localItems) { item in
-                        row(item, queue: library.localItems)
-                    }
-                    .onDelete { offsets in
-                        let items = offsets.map { library.localItems[$0] }
-                        items.forEach { library.delete($0) }
-                    }
-                }
-                if library.remoteItems.isEmpty {
-                    Section("网络 / 电视台") {
-                        Text("点 + →「订阅频道列表」，粘贴 m3u 或 txt 直播源地址，会按电视台自动分组。")
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                ForEach(library.remoteGroups, id: \.name) { group in
-                    Section {
-                        if !collapsed.contains(group.name) {
-                            ForEach(group.items) { item in
-                                row(item, queue: group.items)
-                                    .swipeActions {
-                                        Button(role: .destructive) { library.delete(item) } label: { Label("删除", systemImage: "trash") }
-                                    }
-                            }
-                        }
-                    } header: {
-                        HStack {
-                            Button {
-                                if collapsed.contains(group.name) { collapsed.remove(group.name) } else { collapsed.insert(group.name) }
-                            } label: {
-                                HStack {
-                                    Image(systemName: collapsed.contains(group.name) ? "chevron.right" : "chevron.down")
-                                    Text("\(group.name)（\(group.items.count)）")
-                                }
-                            }
-                            Spacer()
-                            Menu {
-                                Button(role: .destructive) { library.deleteGroup(group.name) } label: { Label("删除整个分组", systemImage: "trash") }
-                            } label: {
-                                Image(systemName: "ellipsis.circle")
-                            }
-                        }
-                    }
-                }
+                if tab == 0 { liveView } else { localView }
             }
             .navigationTitle("车载播放器")
             .toolbar {
@@ -97,7 +149,7 @@ struct LibraryView: View {
                 importing = true
                 PhotoImporter.importItems(items) { n in
                     importing = false
-                    library.lastMessage = "从相册导入了 \(n) 个视频"
+                    library.lastMessage = "从相册导入了 \(n) 个视频"; tab = 1
                     photoItems = []
                 }
             }
@@ -124,7 +176,7 @@ struct LibraryView: View {
                     .textInputAutocapitalization(.never)
                 Button("导入") {
                     if let u = URL(string: subText.trimmingCharacters(in: .whitespaces)), u.scheme != nil {
-                        library.subscribe(u)
+                        library.subscribe(u); tab = 0
                     } else {
                         library.lastMessage = "地址格式不对"
                     }
@@ -143,8 +195,7 @@ struct LibraryView: View {
 
     private func row(_ item: MediaItem, queue: [MediaItem]) -> some View {
         Button {
-            PlayerModel.shared.play(item, queue: queue)
-            showPlayer = true
+            open(item, queue: queue)
         } label: {
             HStack(spacing: 12) {
                 if let logo = item.logo, let u = URL(string: logo) {
