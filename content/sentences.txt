@@ -1,71 +1,71 @@
 #1
-Where were they just now?
-They were here just now.
-It was in its mother's arms a moment ago.
-The ants were near the stone a moment ago.
-Was the butterfly on the leaves?
-Yes, it was. Now it is near the lake.
-Were you in the computer lab yesterday?
-No, I wasn't. I was in Mrs. Li's office.
+Where were they just now?|刚才它们在哪儿？
+They were here just now.|它们刚才还在这儿。
+It was in its mother's arms a moment ago.|刚才它还在妈妈怀里。
+The ants were near the stone a moment ago.|刚才蚂蚁在石头旁边。
+Was the butterfly on the leaves?|蝴蝶刚才在叶子上吗？
+Yes, it was. Now it is near the lake.|是的。现在它在湖边。
+Were you in the computer lab yesterday?|你昨天在计算机室吗？
+No, I wasn't. I was in Mrs. Li's office.|不，我不在。我在李老师的办公室。
 #2
-Were you at home yesterday afternoon?
-Yes, I was.
-No, they weren't. They were in the village.
-There was a public square in my hometown.
-There were a few hotels near the river.
-Ten years ago, my town was poor.
-Now there are many kinds of shops in front of the bridge.
-My hometown is very different now.
+Were you at home yesterday afternoon?|你昨天下午在家吗？
+Yes, I was.|是的，我在。
+No, they weren't. They were in the village.|不，他们不在。他们在村子里。
+There was a public square in my hometown.|我的家乡以前有一个公共广场。
+There were a few hotels near the river.|河边以前有几家宾馆。
+Ten years ago, my town was poor.|十年前，我的小镇很穷。
+Now there are many kinds of shops in front of the bridge.|现在桥前面有各种各样的商店。
+My hometown is very different now.|我的家乡现在大不一样了。
 #3
-What did you do last weekend?
-I cleaned the room and washed the clothes.
-I looked after my little sister.
-Did you have a football match last Sunday?
-I borrowed a book from the reading room.
-We took notes quietly in the reading room.
-I'd like to share my weekend with you.
+What did you do last weekend?|你上周末做了什么？
+I cleaned the room and washed the clothes.|我打扫了房间，洗了衣服。
+I looked after my little sister.|我照顾了我的妹妹。
+Did you have a football match last Sunday?|你们上周日举行足球比赛了吗？
+I borrowed a book from the reading room.|我从阅览室借了一本书。
+We took notes quietly in the reading room.|我们在阅览室里安静地记笔记。
+I'd like to share my weekend with you.|我想和你分享我的周末。
 #4
-Where did you go on your holiday?
-I went to Qingdao with my parents.
-How did you go there?
-We went there by train.
-It is necessary to book the tickets early.
-We played beach volleyball and ate seafood.
-We watched the fireworks on National Day.
-We rode the roller coaster. It was exciting!
+Where did you go on your holiday?|你假期去了哪里？
+I went to Qingdao with my parents.|我和爸爸妈妈去了青岛。
+How did you go there?|你们怎么去的？
+We went there by train.|我们坐火车去的。
+It is necessary to book the tickets early.|提前订票是有必要的。
+We played beach volleyball and ate seafood.|我们打了沙滩排球，吃了海鲜。
+We watched the fireworks on National Day.|我们国庆节看了烟花。
+We rode the roller coaster. It was exciting!|我们坐了过山车，太刺激了！
 #5
-What sport did you take part in?
-I took part in the 100-meter race.
-I took part in the long jump.
-Did you win?
-Yes, I did. No, I didn't.
-He fell down on the way, but he tried his best.
-I believe you can do it!
-Finally, our class won the high jump.
+What sport did you take part in?|你参加了什么运动项目？
+I took part in the 100-meter race.|我参加了100米赛跑。
+I took part in the long jump.|我参加了跳远。
+Did you win?|你赢了吗？
+Yes, I did. No, I didn't.|是的，我赢了。/ 不，我没赢。
+He fell down on the way, but he tried his best.|他在途中摔倒了，但他尽了最大努力。
+I believe you can do it!|我相信你能做到！
+Finally, our class won the high jump.|最后，我们班赢得了跳高比赛。
 #6
-Did you take part in the school sale?
-What did you bring to the sale?
-I brought some paper and magazines.
-What did you sell?
-I sold a notebook and some popcorn.
-We gave the money to the Hope School.
-We had a good time.
-The funny show made us laugh.
+Did you take part in the school sale?|你参加校园义卖了吗？
+What did you bring to the sale?|你带了什么去义卖？
+I brought some paper and magazines.|我带了一些纸和杂志。
+What did you sell?|你卖了什么？
+I sold a notebook and some popcorn.|我卖了一个笔记本和一些爆米花。
+We gave the money to the Hope School.|我们把钱捐给了希望小学。
+We had a good time.|我们玩得很开心。
+The funny show made us laugh.|有趣的表演让我们哈哈大笑。
 #7
-Would you like something to drink?
-Yes, please. A bottle of water.
-What kind of drinks would you like, juice or water?
-I'd like a glass of juice.
-We'd like a plate of beef.
-Can I have a bowl of porridge, please?
-I'd like a piece of pizza and a cup of tea.
-Here is the menu.
+Would you like something to drink?|你想喝点什么吗？
+Yes, please. A bottle of water.|好的，谢谢。来一瓶水。
+What kind of drinks would you like, juice or water?|你想喝哪种饮料，果汁还是水？
+I'd like a glass of juice.|我想要一杯果汁。
+We'd like a plate of beef.|我们想要一盘牛肉。
+Can I have a bowl of porridge, please?|请给我一碗粥好吗？
+I'd like a piece of pizza and a cup of tea.|我想要一块披萨和一杯茶。
+Here is the menu.|这是菜单。
 #8
-New Year is coming.
-What is the date today?
-What did you do this year?
-I read some books about science.
-Do you have a plan for the new year?
-I wish to join our ping-pong team.
-At the Spring Festival, we put up couplets and hang lanterns.
-We visit relatives and friends and exchange greetings.
+New Year is coming.|新年就要到了。
+What is the date today?|今天几月几号？
+What did you do this year?|你今年做了什么？
+I read some books about science.|我读了一些科学方面的书。
+Do you have a plan for the new year?|你有新年计划吗？
+I wish to join our ping-pong team.|我希望加入我们的乒乓球队。
+At the Spring Festival, we put up couplets and hang lanterns.|春节时，我们贴对联、挂灯笼。
+We visit relatives and friends and exchange greetings.|我们走亲访友，互相问候。
