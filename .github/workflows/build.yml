@@ -36,7 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "build-${{ github.run_number }}" CarPlayer-unsigned.ipa \
+          gh release create "build-${{ github.run_number }}" CarPlayer-unsigned.ipa CarPlayer.entitlements CarPlayer-video.entitlements \
             --title "CarPlayer build ${{ github.run_number }}" \
             --notes "Unsigned IPA. Sign with your own certificate before installing."
 
