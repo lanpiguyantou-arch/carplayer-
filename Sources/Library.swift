@@ -7,6 +7,8 @@ struct MediaItem: Identifiable, Hashable, Codable {
     let isRemote: Bool
     var group: String?
     var logo: String?
+    var userAgent: String? = nil
+    var referer: String? = nil
 }
 
 final class Library: ObservableObject {
@@ -198,7 +200,7 @@ final class Library: ObservableObject {
 
     func delete(_ item: MediaItem) {
         if item.isRemote {
-            remoteItems.removeAll { $0 == item }
+            remoteItems.removeAll { $0 == item || ($0.title == item.title && $0.group == item.group) }
             saveRemote()
         } else {
             try? FileManager.default.removeItem(at: item.url)
@@ -206,6 +208,19 @@ final class Library: ObservableObject {
             try? FileManager.default.removeItem(at: srt)
             reload()
         }
+    }
+
+    func clearRemote() {
+        remoteItems.removeAll()
+        saveRemote()
+        lastMessage = "已清空所有网络源"
+    }
+
+    /// Same channel in the same group = alternate lines (线路).
+    func sources(for item: MediaItem) -> [MediaItem] {
+        guard item.isRemote else { return [item] }
+        let s = remoteItems.filter { $0.title == item.title && $0.group == item.group }
+        return s.isEmpty ? [item] : s
     }
 
     func deleteGroup(_ name: String) {
@@ -221,6 +236,16 @@ final class Library: ObservableObject {
 }
 
 enum PlaylistParser {
+    /// Cleans "url$备注" suffixes, percent-encodes Chinese characters, keeps only playable schemes.
+    static func makeURL(_ raw: String) -> URL? {
+        var s = raw.trimmingCharacters(in: .whitespaces)
+        if let d = s.firstIndex(of: "$") { s = String(s[..<d]) }
+        guard !s.isEmpty else { return nil }
+        let url = URL(string: s) ?? s.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed.union(.urlPathAllowed).union(CharacterSet(charactersIn: ":/?&=#%"))).flatMap { URL(string: $0) }
+        guard let u = url, let scheme = u.scheme?.lowercased(), ["http", "https"].contains(scheme) else { return nil }
+        return u
+    }
+
     /// Channel list if the text is one (not an HLS stream playlist), else nil.
     static func channelList(_ text: String) -> [MediaItem]? {
         if text.contains("#EXT-X-") { return nil }   // HLS stream, play directly
@@ -254,24 +279,32 @@ enum PlaylistParser {
         var group: String?
         var logo: String?
         var extgrp: String?
+        var ua: String?
+        var ref: String?
         for line in lines where !line.isEmpty {
             if line.hasPrefix("#EXTINF") {
                 group = attr("group-title", in: line)
                 logo = attr("tvg-logo", in: line)
+                ua = attr("http-user-agent", in: line) ?? attr("user-agent", in: line)
+                ref = attr("http-referrer", in: line) ?? attr("http-referer", in: line)
                 var name: String?
                 if let comma = lastCommaOutsideQuotes(line) {
                     name = String(line[line.index(after: comma)...]).trimmingCharacters(in: .whitespaces)
                 }
                 if name == nil || name!.isEmpty { name = attr("tvg-name", in: line) }
                 title = name
+            } else if line.lowercased().hasPrefix("#extvlcopt:http-user-agent=") {
+                ua = String(line.split(separator: "=", maxSplits: 1).last ?? "")
+            } else if line.lowercased().hasPrefix("#extvlcopt:http-referrer=") {
+                ref = String(line.split(separator: "=", maxSplits: 1).last ?? "")
             } else if line.hasPrefix("#EXTGRP:") {
                 extgrp = String(line.dropFirst(8)).trimmingCharacters(in: .whitespaces)
             } else if line.hasPrefix("#") {
                 continue
-            } else if let url = URL(string: line), url.scheme != nil {
+            } else if let url = PlaylistParser.makeURL(line) {
                 let t = title ?? url.lastPathComponent
-                result.append(MediaItem(url: url, title: t, isRemote: true, group: group ?? extgrp, logo: logo))
-                title = nil; group = nil; logo = nil
+                result.append(MediaItem(url: url, title: t, isRemote: true, group: group ?? extgrp, logo: logo, userAgent: ua, referer: ref))
+                title = nil; group = nil; logo = nil; ua = nil; ref = nil
             }
         }
         return result
@@ -299,9 +332,10 @@ enum PlaylistParser {
             let rest = String(line[line.index(after: comma)...]).trimmingCharacters(in: .whitespaces)
             if rest.hasPrefix("#genre#") { group = name; continue }
             // A line may hold several sources separated by '#'; take the first
-            let first = rest.components(separatedBy: "#").first ?? rest
-            if let url = URL(string: first), url.scheme != nil {
+            for part in rest.components(separatedBy: "#") {
+            if let url = PlaylistParser.makeURL(part) {
                 result.append(MediaItem(url: url, title: name, isRemote: true, group: group, logo: nil))
+            }
             }
         }
         return result
