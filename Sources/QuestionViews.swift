@@ -57,7 +57,9 @@ struct QuestionCard: View {
                     Button("想好了，看答案") { revealed = true }.buttonStyle(.borderedProminent)
                 }
             } else {
-                TextField(question.uo == true ? "多个答案用逗号隔开" : "输入答案", text: $input)
+                TextField(question.uo == true ? "多个答案用逗号隔开" : (question.ty == "spell" ? "输入答案（拼写）" : "输入答案"), text: $input)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .textFieldStyle(.roundedBorder)
                     .focused($focused)
                     .disabled(checked != nil)
@@ -147,6 +149,7 @@ struct PracticeView: View {
                         updateMastery(questions[i].t, ok)
                         answered = true
                     }
+                    .id("\(i)-\(questions[i].id)")
                     if answered {
                         Button(i + 1 < questions.count ? "下一题" : "完成") { i += 1; answered = false }
                             .buttonStyle(.borderedProminent).frame(maxWidth: .infinity)
