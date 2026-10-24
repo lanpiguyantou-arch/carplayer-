@@ -26,6 +26,10 @@ struct WebContainer: UIViewRepresentable {
     let handler = SpeechHandler()
     func makeUIView(context: Context) -> WKWebView {
         let cfg = WKWebViewConfiguration()
+        cfg.allowsInlineMediaPlayback = true
+        cfg.mediaTypesPlaybackRequiringUserAction = []
+        try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .spokenAudio)
+        try? AVAudioSession.sharedInstance().setActive(true)
         cfg.userContentController.add(handler, name: "speak")
         cfg.userContentController.add(handler, name: "stop")
         let w = WKWebView(frame: .zero, configuration: cfg)
