@@ -7,15 +7,41 @@ const store = {
   get(k, d){ try { const v = localStorage.getItem('yw_'+k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
   set(k, v){ try { localStorage.setItem('yw_'+k, JSON.stringify(v)); } catch(e){} }
 };
-function speak(t){
-  t = String(t || '').replace(/[（(][^）)]*[）)]/g, '');
+let _au=null,_gen=0;
+function nativeSpeak(t){
   try {
     if (window.Native && Native.speak) return Native.speak(t);
     if (window.webkit && webkit.messageHandlers && webkit.messageHandlers.speak) return webkit.messageHandlers.speak.postMessage(t);
     if (window.speechSynthesis){ speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang='zh-CN'; u.rate=0.8; speechSynthesis.speak(u); }
   } catch(e){}
 }
-function stopSpeak(){ try { if (window.Native && Native.stop) Native.stop(); else if (window.webkit && webkit.messageHandlers && webkit.messageHandlers.stop) webkit.messageHandlers.stop.postMessage(''); else if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e){} }
+function nativeStop(){ try { if (window.Native && Native.stop) Native.stop(); else if (window.webkit && webkit.messageHandlers && webkit.messageHandlers.stop) webkit.messageHandlers.stop.postMessage(''); else if (window.speechSynthesis) speechSynthesis.cancel(); } catch(e){} }
+function chunks(t){
+  const parts = t.replace(/([。！？；!?;\n])/g,'$1\u0001').split('\u0001');
+  const out=[]; let cur='';
+  const add=s=>{ if ((cur+s).length>100 && cur){ out.push(cur); cur=''; } cur+=s; };
+  for (const seg of parts){
+    if (seg.length>100) seg.replace(/([，、,：:])/g,'$1\u0001').split('\u0001').forEach(add); else add(seg);
+  }
+  if (cur) out.push(cur);
+  return out.map(x=>x.replace(/\s+/g,' ').trim()).filter(Boolean);
+}
+function speak(t){
+  t = String(t || '').replace(/[（(][^）)]*[）)]/g, '').trim();
+  stopSpeak();
+  if (!t) return;
+  if (store.get('voice','online')!=='online') return nativeSpeak(t);
+  const g=++_gen, q=chunks(t); let i=0;
+  const fail=()=>{ if (g!==_gen) return; _gen++; nativeSpeak(q.slice(i).join('')); };
+  const play=()=>{
+    if (g!==_gen || i>=q.length) return;
+    const a=new Audio('https://fanyi.baidu.com/gettts?lan=zh&spd=4&source=web&text='+encodeURIComponent(q[i]));
+    _au=a; a.onended=()=>{ i++; play(); }; a.onerror=fail;
+    const p=a.play(); if (p && p.catch) p.catch(fail);
+  };
+  play();
+}
+function stopSpeak(){ _gen++; if (_au){ try{_au.pause();}catch(e){} _au=null; } nativeStop(); }
 window.__spk = speak;
 const spkBtn = t => `<button class="spk" onclick="__spk(decodeURIComponent('${encodeURIComponent(t).replace(/'/g,'%27')}'))">🔊</button>`;
 const paras = t => String(t||'').split(/\n+/).filter(x=>x.trim()).map(p=>`<p>${esc(p.trim())}</p>`).join('');
@@ -44,7 +70,9 @@ function homeView(){
   return { title:'统编版六年级上册语文', html(){
     H = {};
     if (!D.length) return '<div class="card">内容加载失败</div>';
-    return D.map(u => `<div class="item" onclick="${on(()=>push(unitView(u)))}"><div><b>第${cn[u.unit]}单元</b><small>${esc(u.lessons.map(l=>l.title).join('、'))}</small></div></div>`).join('');
+    const vo = store.get('voice','online');
+    const bar = `<div class="tabs2"><button class="${vo==='online'?'on':''}" onclick="${on(()=>{store.set('voice','online');render();speak('在线真人发音，听起来更自然');})}">🔊 在线真人发音</button><button class="${vo!=='online'?'on':''}" onclick="${on(()=>{store.set('voice','native');render();speak('手机语音，不用联网');})}">手机语音(离线)</button></div>`;
+    return bar + D.map(u => `<div class="item" onclick="${on(()=>push(unitView(u)))}"><div><b>第${cn[u.unit]}单元</b><small>${esc(u.lessons.map(l=>l.title).join('、'))}</small></div></div>`).join('');
   }};
 }
 function unitView(u){
