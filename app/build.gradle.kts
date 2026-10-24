@@ -3,10 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 android {
-    namespace = "com.kg.slbenglish"
+    namespace = "com.kg.yuwen6s"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.kg.slbenglish"
+        applicationId = "com.kg.yuwen6s"
         minSdk = 23
         targetSdk = 34
         versionCode = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
@@ -21,8 +21,4 @@ android {
     buildTypes { getByName("release") { isMinifyEnabled = false; signingConfig = signingConfigs.getByName("fixed") } }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = "17" }
-}
-
-dependencies {
-    implementation("com.google.mlkit:text-recognition:16.0.1")
 }
