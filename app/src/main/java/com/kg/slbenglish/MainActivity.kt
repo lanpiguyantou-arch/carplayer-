@@ -29,6 +29,17 @@ import android.content.ContentValues
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import android.app.UiModeManager
+import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.StateListDrawable
+import android.util.TypedValue
+import android.view.KeyEvent
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import java.util.Collections
+import java.util.WeakHashMap
 
 data class Word(val en: String, val zh: String, val unit: Int)
 data class Line(val en: String, val zh: String) {
@@ -143,6 +154,8 @@ class Speaker(private val ctx: Context, private val prefs: Prefs) {
         tts?.stop()
     }
 
+    fun busy(): Boolean = (try { player?.isPlaying == true } catch (_: Exception) { false }) || tts?.isSpeaking == true
+
     fun shutdown() { stop(); tts?.shutdown() }
 }
 
@@ -194,7 +207,37 @@ class MainActivity : Activity() {
         prefs = Prefs(this)
         speaker = Speaker(this, prefs)
         units = loadUnits()
+        val vto = window.decorView.viewTreeObserver
+        vto.addOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener {
+            curRoot?.let { decorate(it) }
+            if (!window.decorView.isInTouchMode && currentFocus == null) curBody?.let { firstFocusable(it)?.requestFocus() }
+        })
+        vto.addOnGlobalFocusChangeListener(ViewTreeObserver.OnGlobalFocusChangeListener { old, new -> onFocusMove(old, new) })
         showHome()
+    }
+
+    // 遥控器：播放/暂停键、菜单键 = 朗读 / 停止
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE, KeyEvent.KEYCODE_MEDIA_PLAY, KeyEvent.KEYCODE_MEDIA_PAUSE,
+            KeyEvent.KEYCODE_MEDIA_STOP, KeyEvent.KEYCODE_MENU -> {
+                if (event == null || event.repeatCount == 0) togglePlay(keyCode)
+                return true
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    private fun togglePlay(keyCode: Int) {
+        val stopOnly = keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE || keyCode == KeyEvent.KEYCODE_MEDIA_STOP
+        val playing = speaker.busy() || speaker.onDone != null
+        if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY && playing) return
+        if (stopOnly || playing) {
+            speaker.onDone = null; speaker.stop(); stopHook?.invoke()
+            return
+        }
+        val a = playAction
+        if (a != null) a() else Toast.makeText(this, "这一页没有可朗读的内容", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() { speaker.shutdown(); super.onDestroy() }
@@ -220,16 +263,106 @@ class MainActivity : Activity() {
         }
     }
 
+    // ---------- TV / 大屏适配
+    private val isTv: Boolean by lazy { (getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager)?.currentModeType == Configuration.UI_MODE_TYPE_TELEVISION }
+    private val noTouch: Boolean by lazy { !packageManager.hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN) }
+    private val tvLike: Boolean get() = isTv || noTouch
+    private val isBig: Boolean get() = isTv || resources.configuration.screenWidthDp >= 900
+    private val hasCam: Boolean by lazy { packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) }
+    private val fs: Float get() = if (isBig) 1.3f else 1f
+    private val decorated: MutableSet<View> = Collections.newSetFromMap(WeakHashMap<View, Boolean>())
+    private val scaled: MutableSet<View> = Collections.newSetFromMap(WeakHashMap<View, Boolean>())
+    private var curRoot: View? = null
+    private var curBody: LinearLayout? = null
+    private var preferFocus: View? = null
+    private var playAction: (() -> Unit)? = null
+    private var stopHook: (() -> Unit)? = null
+    private val focusColor = Color.parseColor("#FFB300")
+
+    private fun focusRing(): StateListDrawable = StateListDrawable().apply {
+        addState(intArrayOf(android.R.attr.state_focused), GradientDrawable().apply {
+            setColor(Color.TRANSPARENT); cornerRadius = dp(12).toFloat(); setStroke(dp(if (isBig) 4 else 3), focusColor)
+        })
+        addState(intArrayOf(), ColorDrawable(Color.TRANSPARENT))
+    }
+
+    // 给所有可操作控件加上焦点（遥控器方向键）和焦点高亮；大屏时放大字号
+    private fun decorate(v: View) {
+        if (v is ViewGroup) {
+            if (tvLike && v !is ScrollView) v.clipChildren = false
+            for (i in 0 until v.childCount) decorate(v.getChildAt(i))
+        }
+        if (isBig && v is TextView && !scaled.contains(v)) {
+            scaled.add(v); v.setTextSize(TypedValue.COMPLEX_UNIT_PX, v.textSize * 1.3f)
+        }
+        if (decorated.contains(v)) return
+        val actionable = v.hasOnClickListeners() || v is CompoundButton || v is Button || v is SeekBar || v is EditText
+        if (!actionable) return
+        decorated.add(v)
+        v.isFocusable = true
+        if (v is EditText && !tvLike) return
+        v.foreground = focusRing()
+    }
+
+    private fun firstFocusable(v: View): View? {
+        if (!v.isShown) return null
+        if (decorated.contains(v) && v.isFocusable) return v
+        if (v is ViewGroup) for (i in 0 until v.childCount) { val f = firstFocusable(v.getChildAt(i)); if (f != null) return f }
+        return null
+    }
+
+    private fun isInside(v: View, parent: View): Boolean {
+        var p: Any? = v
+        while (p is View) { if (p === parent) return true; p = p.parent }
+        return false
+    }
+
+    private fun onFocusMove(old: View?, new: View?) {
+        old?.animate()?.scaleX(1f)?.scaleY(1f)?.setDuration(100)?.start()
+        if (new != null && decorated.contains(new) && !new.isInTouchMode && new !is EditText) {
+            val s = if (new.width > dp(480)) 1.02f else 1.06f
+            new.animate().scaleX(s).scaleY(s).setDuration(120).start()
+        }
+        if (old != null) {
+            val body = curBody
+            window.decorView.post {
+                if (!old.isAttachedToWindow || !old.isShown) {
+                    val cf = currentFocus
+                    if (body != null && body === curBody && !window.decorView.isInTouchMode && (cf == null || !isInside(cf, body)))
+                        firstFocusable(body)?.requestFocus()
+                }
+            }
+        }
+    }
+
+    // 回车 / 确认键提交：软键盘动作或硬件 Enter（只认按下，避免抬起时再触发一次）
+    private fun onSubmit(input: EditText, action: () -> Unit) {
+        input.setOnEditorActionListener { _, _, e -> if (e == null || e.action == KeyEvent.ACTION_DOWN) action(); true }
+    }
+
+    private fun addGrid(body: LinearLayout, cards: List<View>, cols: Int, top: Int) {
+        cards.chunked(cols).forEach { chunk ->
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            chunk.forEachIndexed { k, c ->
+                row.addView(c, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f).apply { if (k > 0) leftMargin = dp(14) })
+            }
+            repeat(cols - chunk.size) { row.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f).apply { leftMargin = dp(14) }) }
+            body.addView(row, lp(top = top))
+        }
+    }
+
     // ---------- UI helpers
     private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
     private fun round(color: Int, r: Int = 14, stroke: Int? = null) = GradientDrawable().apply {
         setColor(color); cornerRadius = dp(r).toFloat(); if (stroke != null) setStroke(dp(1), stroke)
     }
     private fun text(s: String, size: Float = 16f, color: Int = Color.parseColor("#222222"), bold: Boolean = false) =
-        TextView(this).apply { text = s; textSize = size; setTextColor(color); if (bold) setTypeface(typeface, Typeface.BOLD) }
+        TextView(this).apply { text = s; textSize = size * fs; scaled.add(this); setTextColor(color); if (bold) setTypeface(typeface, Typeface.BOLD) }
     private fun button(s: String, color: Int = blue, onClick: () -> Unit) = Button(this).apply {
-        text = s; isAllCaps = false; setTextColor(Color.WHITE); textSize = 15f
-        background = round(color, 10); setPadding(dp(12), dp(6), dp(12), dp(6)); minHeight = dp(40); minimumHeight = dp(40)
+        text = s; isAllCaps = false; setTextColor(Color.WHITE); textSize = 15f * fs; scaled.add(this)
+        val mh = if (isBig) 52 else 40
+        background = round(color, 10); setPadding(dp(12), dp(6), dp(12), dp(6)); minHeight = dp(mh); minimumHeight = dp(mh)
+        isFocusable = true
         setOnClickListener { onClick() }
     }
     private fun lp(w: Int = LinearLayout.LayoutParams.MATCH_PARENT, top: Int = 8) =
@@ -241,6 +374,7 @@ class MainActivity : Activity() {
     private fun page(title: String, self: () -> Unit, build: (LinearLayout) -> Unit) {
         back.add(self)
         speaker.onDone = null
+        playAction = null; stopHook = null
         val root = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setBackgroundColor(bg) }
         val bar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
@@ -254,9 +388,23 @@ class MainActivity : Activity() {
         val scroll = ScrollView(this)
         val body = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL; setPadding(dp(14), dp(8), dp(14), dp(40)) }
         scroll.addView(body)
+        if (isBig) {
+            val side = maxOf(0, (resources.displayMetrics.widthPixels - dp(1000)) / 2)
+            scroll.setPadding(side, 0, side, 0)
+        }
         root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
         build(body)
         setContentView(root)
+        curRoot = root; curBody = body
+        decorate(root)
+        root.post {
+            val pf = preferFocus; preferFocus = null
+            if (!root.isInTouchMode) {
+                val target = pf?.takeIf { it.isShown } ?: firstFocusable(body)
+                target?.requestFocus()
+                if (target is EditText) (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(target, 0)
+            }
+        }
     }
 
     private fun speedBar(): View {
@@ -267,6 +415,7 @@ class MainActivity : Activity() {
         val label = text(speedLabel(), 14f)
         val seek = SeekBar(this).apply {
             max = 12; progress = ((prefs.speed - 0.3f) / 0.1f).toInt().coerceIn(0, 12)
+            keyProgressIncrement = 1; isFocusable = true
             setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(s: SeekBar?, p: Int, u: Boolean) { prefs.speed = 0.3f + p * 0.1f; label.text = speedLabel() }
                 override fun onStartTrackingTouch(s: SeekBar?) {}
@@ -281,40 +430,48 @@ class MainActivity : Activity() {
 
     // ---------- Home
     private fun showHome(): Unit = page("陕旅版英语 六年级上册", ::showHome) { body ->
-        body.addView(text("新版（2026）· 点单元开始学习。顶部滑条随时调语速。", 14f, Color.GRAY), lp())
+        body.addView(text(if (isBig) "新版（2026）· 方向键选单元，按确认开始学习。顶部滑条左右键调语速。" else "新版（2026）· 点单元开始学习。顶部滑条随时调语速。", 14f, Color.GRAY), lp())
+        val unitCards = ArrayList<View>()
         for (u in units) {
             val c = card()
             c.addView(text("Unit ${u.n}  ${u.title}", 17f, bold = true))
             c.addView(text("${u.words.size} 个单词短语 · ${u.sentences.size} 个重点句 · 已掌握 ${prefs.learned(u.n)}", 13f, Color.GRAY), lp(top = 4))
             c.setOnClickListener { showUnit(u) }
-            body.addView(c, lp(top = 10))
+            unitCards.add(c)
         }
         val rv = card()
         val due = dueItems().size
         rv.addView(text("📅 今日复习（${due}）", 17f, Color.parseColor("#5E35B1"), true))
         rv.addView(text(if (reviewMap().length() == 0) "按遗忘曲线安排单词和句子复习，先在单元里点“加入复习计划”" else "按遗忘曲线（1、2、4、7、15、30天）安排，点开看计划", 13f, Color.GRAY), lp(top = 4))
         rv.setOnClickListener { showPlan() }
-        body.addView(rv, lp(top = 14))
         val zd = card()
         zd.addView(text("中译英听写（全册）", 17f, Color.parseColor("#D81B60"), true))
         zd.addView(text("念中文，孩子写英文；可选随机或顺序，可选单元", 13f, Color.GRAY), lp(top = 4))
         zd.setOnClickListener { showZhPick() }
-        body.addView(zd, lp(top = 14))
         val mt = card()
         mt.addView(text("我的课文（自己添加）", 17f, Color.parseColor("#00897B"), true))
         mt.addView(text("粘贴课本里的英文，自动分句、点读、翻译", 13f, Color.GRAY), lp(top = 4))
         mt.setOnClickListener { showMyTexts() }
-        body.addView(mt, lp(top = 14))
         val w = card()
         w.addView(text("错词本（${prefs.wrong.size}）", 17f, red, true))
         w.addView(text("听写和卡片里记错的词会自动收进来", 13f, Color.GRAY), lp(top = 4))
         w.setOnClickListener { showWrong() }
-        body.addView(w, lp(top = 14))
         val s = card()
         s.addView(text("发音设置", 17f, bold = true))
         s.addView(text(settingLabel(), 13f, Color.GRAY), lp(top = 4))
         s.setOnClickListener { showSettings() }
-        body.addView(s, lp(top = 10))
+        if (isBig) {
+            addGrid(body, unitCards, 3, 14)
+            body.addView(text("功能", 17f, bold = true), lp(top = 22))
+            addGrid(body, listOf(rv, zd, mt, w, s), 3, 12)
+        } else {
+            unitCards.forEach { body.addView(it, lp(top = 10)) }
+            body.addView(rv, lp(top = 14))
+            body.addView(zd, lp(top = 14))
+            body.addView(mt, lp(top = 14))
+            body.addView(w, lp(top = 14))
+            body.addView(s, lp(top = 10))
+        }
     }
 
     private fun settingLabel() = (if (prefs.engine == 0) "在线真人发音" else "手机系统语音") + " · " + (if (prefs.accent == 2) "美音" else "英音")
@@ -336,6 +493,7 @@ class MainActivity : Activity() {
         body.addView(a, lp())
         body.addView(button("试听：They were here just now.") { speaker.speak("They were here just now.") }, lp(top = 16))
         body.addView(button("慢速试听", green) { speaker.speak("They were here just now.", slow = true) }, lp())
+        playAction = { speaker.speak("They were here just now.") }
     }
 
     // ---------- Unit
@@ -350,15 +508,16 @@ class MainActivity : Activity() {
             }, lp(top = 14))
             val cc = card()
             cc.addView(text("课本课文 Part A / Part B", 17f, Color.parseColor("#00897B"), true))
-            cc.addView(text("拍一下课本那一页，自动识别英文、翻译，然后点读", 13f, Color.GRAY), lp(top = 4))
+            cc.addView(text(if (hasCam) "拍一下课本那一页，自动识别英文、翻译，然后点读" else "把课本里的英文输进来，自动翻译，然后点读（电视端不支持拍照）", 13f, Color.GRAY), lp(top = 4))
             val mine = loadMyTexts()
             for (k in 0 until mine.length()) {
                 val o = mine.getJSONObject(k)
                 if (o.optInt("u") == u.n) cc.addView(button("📖 " + o.getString("t"), Color.parseColor("#00897B")) { translateMissing(k); showPointRead("Unit ${u.n} 课文", o.getString("t"), linesOf(o)) }, lp())
             }
             val pr = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            pr.addView(button("📷 添加 Part A", Color.parseColor("#26A69A")) { showAddText(u.n, "Unit ${u.n} Part A") }, LinearLayout.LayoutParams(0, -2, 1f))
-            pr.addView(button("📷 添加 Part B", Color.parseColor("#26A69A")) { showAddText(u.n, "Unit ${u.n} Part B") }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            val addIcon = if (hasCam) "📷" else "✏"
+            pr.addView(button("$addIcon 添加 Part A", Color.parseColor("#26A69A")) { showAddText(u.n, "Unit ${u.n} Part A") }, LinearLayout.LayoutParams(0, -2, 1f))
+            pr.addView(button("$addIcon 添加 Part B", Color.parseColor("#26A69A")) { showAddText(u.n, "Unit ${u.n} Part B") }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
             cc.addView(pr, lp())
             body.addView(cc, lp(top = 14))
             body.addView(button("💬 单元情景对话（${u.textTitle}，带翻译）", Color.parseColor("#00897B")) { showPointRead("Unit ${u.n} 情景对话", u.textTitle, u.text) }, lp(top = 10))
@@ -368,6 +527,7 @@ class MainActivity : Activity() {
             body.addView(button("④ 听音拼写（听写）", Color.parseColor("#FB8C00")) { showDictation(u.words.shuffled(), "Unit ${u.n} 听写", u.n) }, lp())
             body.addView(button("⑥ 中译英听写（念中文写英文）", Color.parseColor("#D81B60")) { showZhSetup(u.words, "Unit ${u.n} 中译英听写", u.n) }, lp())
             body.addView(button("⑤ 连续播放全部单词", Color.parseColor("#8E24AA")) { playAll(u.words.map { it.en }) }, lp())
+            playAction = { playAll(u.words.map { it.en }) }
         }
     }
 
@@ -401,6 +561,7 @@ class MainActivity : Activity() {
                 row.setOnClickListener { speaker.speak(w.en) }
                 body.addView(row, lp(top = 6))
             }
+            playAction = { playAll(words.map { it.en }) }
         }
     }
 
@@ -427,6 +588,7 @@ class MainActivity : Activity() {
                 c.addView(btns, lp())
                 body.addView(c, lp(top = 10))
             }
+            playAction = { playAll(u.sentences.map { it.en }) }
         }
     }
 
@@ -513,8 +675,10 @@ class MainActivity : Activity() {
                         } else { i++; render() }
                     }
                     action = button("提交") { check() }
-                    input.setOnEditorActionListener { _, _, _ -> check(); true }
+                    onSubmit(input) { check(); if (checked && !input.isInTouchMode && action.isShown) action.requestFocus() }
                     holder.addView(action, lp(top = 10))
+                    playAction = { speaker.speak(w.en) }
+                    preferFocus = input
                     input.requestFocus()
                     (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(input, 0)
                     Handler(Looper.getMainLooper()).postDelayed({ speaker.speak(w.en) }, 400)
@@ -737,9 +901,16 @@ class MainActivity : Activity() {
                         } else next()
                     }
                     action = button("提交 / 看答案", Color.parseColor("#D81B60")) { reveal() }
-                    input.setOnEditorActionListener { _, _, _ -> reveal(); true }
+                    onSubmit(input) {
+                        val first = !revealed
+                        reveal()
+                        if (first && revealed && !input.isInTouchMode) {
+                            if (action.visibility == View.VISIBLE) action.requestFocus() else judge.getChildAt(0).requestFocus()
+                        }
+                    }
                     holder.addView(action, lp(top = 10))
                     holder.addView(judge, lp(top = 10))
+                    playAction = { speaker.speakZh(w.zh) }
                     Handler(Looper.getMainLooper()).postDelayed({ speaker.speakZh(w.zh) }, 400)
                 }
             }
@@ -792,6 +963,8 @@ class MainActivity : Activity() {
                 cards.add(c)
                 body.addView(c, lp(top = 8))
             }
+            playAction = { val cf = currentFocus; val fi = cards.indexOfFirst { it === cf }; readFrom(if (fi >= 0) fi else 0, false) }
+            stopHook = { mark(-1) }
         }
     }
 
@@ -833,6 +1006,7 @@ class MainActivity : Activity() {
     private var ocrTarget: EditText? = null
     private var camUri: Uri? = null
     private fun pickImage(camera: Boolean) {
+        if (camera && !hasCam) { Toast.makeText(this, "电视端不支持拍照", Toast.LENGTH_SHORT).show(); return }
         try {
             if (camera) {
                 val cv = ContentValues().apply { put(MediaStore.Images.Media.DISPLAY_NAME, "slb_" + System.currentTimeMillis() + ".jpg"); put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg") }
@@ -893,10 +1067,14 @@ class MainActivity : Activity() {
             body.addView(en, lp())
             ocrTarget = en
             val orow = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            orow.addView(button("📷 拍照识别", Color.parseColor("#26A69A")) { pickImage(true) }, LinearLayout.LayoutParams(0, -2, 1f))
-            orow.addView(button("🖼 从相册选", Color.parseColor("#26A69A")) { pickImage(false) }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            if (hasCam) {
+                orow.addView(button("📷 拍照识别", Color.parseColor("#26A69A")) { pickImage(true) }, LinearLayout.LayoutParams(0, -2, 1f))
+                orow.addView(button("🖼 从相册选", Color.parseColor("#26A69A")) { pickImage(false) }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+            } else {
+                orow.addView(button("🖼 从图片识别", Color.parseColor("#26A69A")) { pickImage(false) }, LinearLayout.LayoutParams(0, -2, 1f))
+            }
             body.addView(orow, lp())
-            body.addView(text("可以分几次拍（一页一张），识别结果会接在后面。", 12f, Color.GRAY), lp(top = 2))
+            body.addView(text(if (hasCam) "可以分几次拍（一页一张），识别结果会接在后面。" else "电视端不支持拍照识别，请直接输入英文，或选一张课本图片识别。", 12f, Color.GRAY), lp(top = 2))
             body.addView(text("中文翻译（可不填，不填会自动在线翻译）", 14f, Color.DKGRAY), lp(top = 12))
             val zh = EditText(this).apply {
                 minLines = 4; gravity = Gravity.TOP
@@ -965,6 +1143,7 @@ class MainActivity : Activity() {
                 row.setOnClickListener { speaker.speak(w.en) }
                 body.addView(row, lp(top = 6))
             }
+            playAction = { playAll(list.map { it.en }) }
         }
     }
 }
