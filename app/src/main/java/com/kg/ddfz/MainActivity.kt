@@ -496,7 +496,7 @@ class MainActivity : Activity() {
             said = text; p.clear()
             if (text.isNotEmpty() && item.keys.isNotEmpty()) {
                 p.heard.text = "你说的：$text"
-                val hits = item.keys.map { Judge.hit(text, it) }
+                val hits = item.keys.indices.map { Judge.key(text, item, it) }
                 val n = hits.count { it }
                 ok = n * 10 >= item.keys.size * 6
                 p.status.text = if (ok) "✅ 答得不错！说到了 $n / ${item.keys.size} 个要点" else "🤔 说到了 $n / ${item.keys.size} 个要点，还差一点"
@@ -505,6 +505,7 @@ class MainActivity : Activity() {
                 p.add(text("要点：" + item.keys.mapIndexed { i, k -> if (hits[i]) "✓$k" else "○？" }.joinToString("   "), 16f, Color.DKGRAY))
                 focus(p.buttons(button("继续 ▶", green) { after() }, button("🎤 再答一次", blue) { listen() }))
                 p.add(button("👀 查看参考答案", orange) { reveal() })
+                if (!ok) p.add(button("👨‍👩‍👧 家长改判：其实答对了", Color.GRAY) { ok = true; p.status.text = "✅ 家长判定：答对了"; p.status.setTextColor(green); after() })
             } else {
                 p.status.text = if (heard) "👂 听到回答了！答得完整吗？" else "回答完了吗？"; p.status.setTextColor(blue)
                 focus(p.buttons(button("✓ 答全了，继续", green) { ok = true; after() }, button("✗ 没答全", red) { ok = false; reveal() }))
