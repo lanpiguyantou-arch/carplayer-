@@ -115,6 +115,7 @@ struct QuizView: View {
                     HStack { BigButton("继续 ▶", .green) { phase = .itemDone }; BigButton("🎤 再答一次", .blue) { listen() } }
                     BigButton("👀 查看参考答案", orange) { reveal() }
                     BigButton("🧠 怎么记住这题", purple) { memory() }
+                    if !r { BigButton("👨‍👩‍👧 家长改判：其实答对了", .gray) { ok = true; lastRight = true; phase = .itemDone } }
                 }
             } else {
                 HStack {
@@ -192,7 +193,7 @@ struct QuizView: View {
                 if r { Speaker.shared.speak("答对了") }
                 phase = .judged
             } else if !it.keys.isEmpty {
-                hits = it.keys.map { Judge.hit(t, $0) }
+                hits = it.keys.indices.map { Judge.key(t, it, $0) }
                 let n = hits.filter { $0 }.count
                 let r = n * 10 >= it.keys.count * 6
                 lastRight = r; if !r { ok = false }
