@@ -582,16 +582,21 @@ class MainActivity : Activity() {
     private fun showWords(words: List<Word>, title: String): Unit {
         val self = { showWords(words, title) }
         page(title, self) { body ->
-            body.addView(text("点单词听发音，点“慢”听慢速。", 13f, Color.GRAY), lp())
+            body.addView(text("点单词听发音，点“慢”听慢速。标红的是没记住的。", 13f, Color.GRAY), lp())
+            val bad = words.filter { it.en in prefs.wrong }
+            if (bad.isNotEmpty()) body.addView(button("✗ 没记住的 ${bad.size} 个，单独练", red) { showCards(bad.shuffled(), "没记住的单词", 0) }, lp(top = 8))
             for (w in words) {
                 val row = LinearLayout(this).apply {
                     orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL
                     background = round(Color.WHITE, 10); setPadding(dp(12), dp(10), dp(8), dp(10))
                 }
                 val col = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-                col.addView(text(w.en, 18f, blue, true))
+                val isBad = w.en in prefs.wrong
+                if (isBad) row.background = round(Color.parseColor("#FFEBEE"), 10, red)
+                col.addView(text(w.en, 18f, if (isBad) red else blue, true))
                 col.addView(text(w.zh, 14f, Color.DKGRAY))
                 row.addView(col, LinearLayout.LayoutParams(0, -2, 1f))
+                if (isBad) row.addView(wrongTag())
                 row.addView(text("🔊", 22f).apply { setPadding(dp(10), 0, dp(10), 0); setOnClickListener { speaker.speak(w.en) } })
                 row.addView(text("慢", 16f, green, true).apply { setPadding(dp(10), 0, dp(6), 0); setOnClickListener { speaker.speak(w.en, true) } })
                 row.setOnClickListener { speaker.speak(w.en) }
@@ -631,6 +636,7 @@ class MainActivity : Activity() {
     private fun showCards(words: List<Word>, title: String, unitN: Int): Unit {
         if (words.isEmpty()) { Toast.makeText(this, "没有单词", Toast.LENGTH_SHORT).show(); return }
         var i = 0; var known = 0
+        val missed = ArrayList<Word>()
         lateinit var render: () -> Unit
         val self = { showCards(words, title, unitN) }
         page(title, self) { body ->
@@ -641,10 +647,16 @@ class MainActivity : Activity() {
                 if (i >= words.size) {
                     holder.addView(text("完成！记住 $known / ${words.size}", 22f, green, true), lp(top = 30))
                     if (unitN > 0) prefs.setLearned(unitN, known)
-                    holder.addView(button("再来一遍") { i = 0; known = 0; render() }, lp(top = 20))
+                    if (missed.isNotEmpty()) {
+                        holder.addView(text("没记住的 ${missed.size} 个（已放进错词本和“今日复习”）：", 16f, red, true), lp(top = 16))
+                        missed.forEach { holder.addView(text("${it.en}   ${it.zh}", 18f), lp(top = 4)) }
+                        val again = ArrayList(missed)
+                        holder.addView(button("马上再练没记住的", red) { showCards(again.shuffled(), "没记住的单词", 0) }, lp(top = 16))
+                    }
+                    holder.addView(button("再来一遍") { i = 0; known = 0; missed.clear(); render() }, lp(top = 12))
                 } else {
                     val w = words[i]
-                    holder.addView(text("${i + 1} / ${words.size}", 14f, Color.GRAY), lp())
+                    holder.addView(text("${i + 1} / ${words.size}" + (if (w.en in prefs.wrong) "   · 上次没记住" else ""), 14f, if (w.en in prefs.wrong) red else Color.GRAY), lp())
                     val c = card().apply { gravity = Gravity.CENTER; minimumHeight = dp(200) }
                     c.addView(text(w.zh, 26f, bold = true).apply { gravity = Gravity.CENTER }, lp())
                     val ans = text(w.en, 28f, blue, true).apply { gravity = Gravity.CENTER; visibility = View.INVISIBLE }
@@ -653,8 +665,8 @@ class MainActivity : Activity() {
                     val show = button("翻开看答案") { ans.visibility = View.VISIBLE; speaker.speak(w.en) }
                     holder.addView(show, lp(top = 14))
                     val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-                    row.addView(button("✓ 记住了", green) { known++; prefs.wrong = prefs.wrong - w.en; i++; render() }, LinearLayout.LayoutParams(0, -2, 1f))
-                    row.addView(button("✗ 没记住", red) { prefs.wrong = prefs.wrong + w.en; i++; render() },
+                    row.addView(button("✓ 记住了", green) { known++; markRight(w); i++; render() }, LinearLayout.LayoutParams(0, -2, 1f))
+                    row.addView(button("✗ 没记住", red) { markWrong(w); missed.add(w); i++; render() },
                         LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(10) })
                     holder.addView(row, lp(top = 10))
                 }
@@ -702,10 +714,10 @@ class MainActivity : Activity() {
                             checked = true
                             if (norm(input.text.toString()) == norm(w.en)) {
                                 right++; result.setTextColor(green); result.text = "✓ 正确：${w.en}"
-                                prefs.wrong = prefs.wrong - w.en
+                                markRight(w)
                             } else {
                                 result.setTextColor(red); result.text = "✗ 正确拼写：${w.en}\n你写的：${input.text}"
-                                prefs.wrong = prefs.wrong + w.en
+                                markWrong(w)
                             }
                             action.text = if (i + 1 >= words.size) "看结果" else "下一个"
                         } else { i++; render() }
@@ -753,6 +765,21 @@ class MainActivity : Activity() {
         o.put("d", today() + when { !ok -> 1; st >= curve.size -> 9999; else -> curve[st] })
         prefs.review = m.toString()
     }
+
+    // 没记住：进错词本，并放进遗忘曲线（今天就进“今日复习”，之后按 1-2-4-7-15-30 天）
+    private fun markWrong(w: Word) {
+        prefs.wrong = prefs.wrong + w.en
+        val m = reviewMap(); val t = today()
+        m.put("w:" + w.en, org.json.JSONObject().put("st", 0).put("d", t).put("u", w.unit))
+        prefs.review = m.toString()
+    }
+    // 记住了：移出错词本；还没进计划的单词自动开始遗忘曲线
+    private fun markRight(w: Word) {
+        prefs.wrong = prefs.wrong - w.en
+        val m = reviewMap()
+        if (!m.has("w:" + w.en)) { m.put("w:" + w.en, org.json.JSONObject().put("st", 0).put("d", today() + 1).put("u", w.unit)); prefs.review = m.toString() }
+    }
+    private fun wrongTag() = text("没记住", 13f, Color.WHITE, true).apply { background = round(red, 8); setPadding(dp(8), dp(2), dp(8), dp(2)) }
 
     private fun showPlan(): Unit {
         val self = { showPlan() }
@@ -914,8 +941,8 @@ class MainActivity : Activity() {
                     val judge = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; visibility = View.GONE }
                     lateinit var action: Button
                     fun next() { i++; render() }
-                    judge.addView(button("✓ 写对了", green) { right++; prefs.wrong = prefs.wrong - w.en; next() }, LinearLayout.LayoutParams(0, -2, 1f))
-                    judge.addView(button("✗ 写错了", red) { wrongList.add(w); prefs.wrong = prefs.wrong + w.en; next() }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
+                    judge.addView(button("✓ 写对了", green) { right++; markRight(w); next() }, LinearLayout.LayoutParams(0, -2, 1f))
+                    judge.addView(button("✗ 写错了", red) { wrongList.add(w); markWrong(w); next() }, LinearLayout.LayoutParams(0, -2, 1f).apply { leftMargin = dp(8) })
                     val reveal = {
                         if (!revealed) {
                             revealed = true
@@ -926,11 +953,11 @@ class MainActivity : Activity() {
                                 result.setTextColor(Color.parseColor("#0D47A1")); result.text = "答案：${w.en}"
                                 judge.visibility = View.VISIBLE; action.visibility = View.GONE
                             } else if (norm(typed) == norm(w.en)) {
-                                right++; prefs.wrong = prefs.wrong - w.en
+                                right++; markRight(w)
                                 result.setTextColor(green); result.text = "✓ 正确：${w.en}"
                                 action.text = if (i + 1 >= words.size) "看结果" else "下一个"
                             } else {
-                                wrongList.add(w); prefs.wrong = prefs.wrong + w.en
+                                wrongList.add(w); markWrong(w)
                                 result.setTextColor(red); result.text = "✗ 正确：${w.en}\n你写的：$typed"
                                 action.text = if (i + 1 >= words.size) "看结果" else "下一个"
                             }
