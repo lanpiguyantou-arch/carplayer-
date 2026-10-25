@@ -24,7 +24,7 @@ import java.util.Locale
 // ---------------- 数据
 data class Item(
     val id: String, val lesson: Int, val lessonTitle: String, val type: String, val q: String,
-    val blanks: List<String>, val alt: List<List<String>>, val a: String, val keys: List<String>,
+    val blanks: List<String>, val alt: List<List<String>>, val a: String, val keys: List<String>, val syn: List<List<String>>,
     val memory: String, val diagram: String
 ) {
     val isFill get() = type == "fill"
@@ -46,8 +46,10 @@ fun loadBank(ctx: Context): List<LessonData> {
             fun strs(key: String): List<String> = it.optJSONArray(key)?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList()
             val altA = it.optJSONArray("alt")
             val alt = (0 until (altA?.length() ?: 0)).map { i -> altA!!.optJSONArray(i)?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList() }
+            val synA = it.optJSONArray("syn")
+            val syn = (0 until (synA?.length() ?: 0)).map { i -> synA!!.optJSONArray(i)?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList() }
             Item("$lid-$k", lid, title, it.optString("type", "qa"), it.getString("q"), strs("blanks"), alt,
-                it.optString("a"), strs("keys"), it.optString("memory"), it.optString("diagram"))
+                it.optString("a"), strs("keys"), syn, it.optString("memory"), it.optString("diagram"))
         })
     }
 }
@@ -344,4 +346,5 @@ object Judge {
         return m >= Math.ceil(t.length * 0.75)
     }
     fun fill(said: String, blank: String, alts: List<String>) = hit(said, blank) || alts.any { hit(said, it) }
+    fun key(said: String, item: Item, i: Int) = hit(said, item.keys[i]) || (item.syn.getOrNull(i) ?: emptyList()).any { hit(said, it) }
 }
