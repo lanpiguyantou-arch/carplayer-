@@ -35,6 +35,7 @@ struct Card<C: View>: View {
 }
 
 struct QuizSpec: Hashable { let items: [Item]; let title: String; let review: Bool }
+enum Route: Hashable { case lesson(Int), quiz(QuizSpec), wrong, settings }
 
 struct HomeView: View {
     @EnvironmentObject var store: Store
@@ -44,19 +45,19 @@ struct HomeView: View {
             VStack(spacing: 12) {
                 Text("题目会读出来，读到横线处请孩子说出答案。").font(.subheadline).foregroundColor(.gray).frame(maxWidth: .infinity, alignment: .leading)
                 let due = store.dueItems
-                NavigationLink(value: QuizSpec(items: due, title: "今日复习", review: true)) {
+                NavigationLink(value: Route.quiz(QuizSpec(items: due, title: "今日复习", review: true))) {
                     Card(color: Color.purple.opacity(0.12)) {
                         Text("📅 今日复习（\(due.count)）").font(.title3.bold()).foregroundColor(purple)
                         Text("错题按 1-2-4-7-15-30 天遗忘曲线回来复习").font(.footnote).foregroundColor(.gray)
                     }
                 }.disabled(due.isEmpty)
-                NavigationLink { WrongView() } label: {
+                NavigationLink(value: Route.wrong) {
                     Card(color: Color.red.opacity(0.10)) {
                         Text("📕 错题本（\(store.wrongItems.count)）").font(.title3.bold()).foregroundColor(.red)
                         Text("已牢记 \(store.mastered) 题 · 查看和重练").font(.footnote).foregroundColor(.gray)
                     }
                 }
-                NavigationLink(value: QuizSpec(items: Array(Bank.all.shuffled().prefix(10)), title: "全册随机", review: false)) {
+                NavigationLink(value: Route.quiz(QuizSpec(items: Array(Bank.all.shuffled().prefix(10)), title: "全册随机", review: false))) {
                     Card(color: Color.green.opacity(0.12)) {
                         Text("🎲 全册随机 10 题").font(.title3.bold()).foregroundColor(.green)
                         Text("填空和问答混合抽问").font(.footnote).foregroundColor(.gray)
@@ -64,19 +65,26 @@ struct HomeView: View {
                 }
                 Text("课程").font(.headline).frame(maxWidth: .infinity, alignment: .leading).padding(.top, 6)
                 ForEach(Bank.lessons) { l in
-                    NavigationLink { LessonView(l: l) } label: {
+                    NavigationLink(value: Route.lesson(l.id)) {
                         Card {
                             Text("第\(l.id)课  \(l.title)").font(.headline).foregroundColor(.primary)
                             Text("填空 \(l.items.filter { $0.isFill }.count) · 问答 \(l.items.filter { !$0.isFill }.count)").font(.footnote).foregroundColor(.gray)
                         }
                     }
                 }
-                NavigationLink { SettingsView() } label: { Card { Text("⚙ 设置").font(.headline).foregroundColor(.primary) } }
+                NavigationLink(value: Route.settings) { Card { Text("⚙ 设置").font(.headline).foregroundColor(.primary) } }
             }.padding()
         }
         .background(Color(.systemGroupedBackground))
         .navigationTitle("道法六上 · 问答")
-        .navigationDestination(for: QuizSpec.self) { QuizView(spec: $0) }
+        .navigationDestination(for: Route.self) { r in
+            switch r {
+            case .lesson(let id): if let l = Bank.lessons.first(where: { $0.id == id }) { LessonView(l: l) }
+            case .quiz(let q): QuizView(spec: q)
+            case .wrong: WrongView()
+            case .settings: SettingsView()
+            }
+        }
     }
 }
 
@@ -87,15 +95,15 @@ struct LessonView: View {
             VStack(spacing: 10) {
                 let fills = l.items.filter { $0.isFill }; let qas = l.items.filter { !$0.isFill }
                 HStack {
-                    NavigationLink(value: QuizSpec(items: l.items, title: "第\(l.id)课", review: false)) { Pill("▶ 按顺序全部", brand) }
-                    NavigationLink(value: QuizSpec(items: l.items.shuffled(), title: "第\(l.id)课 随机", review: false)) { Pill("🎲 随机问", .green) }
+                    NavigationLink(value: Route.quiz(QuizSpec(items: l.items, title: "第\(l.id)课", review: false))) { Pill("▶ 按顺序全部", brand) }
+                    NavigationLink(value: Route.quiz(QuizSpec(items: l.items.shuffled(), title: "第\(l.id)课 随机", review: false))) { Pill("🎲 随机问", .green) }
                 }
                 HStack {
-                    NavigationLink(value: QuizSpec(items: fills, title: "第\(l.id)课 填空", review: false)) { Pill("✏ 只问填空(\(fills.count))", .blue) }
-                    NavigationLink(value: QuizSpec(items: qas, title: "第\(l.id)课 问答", review: false)) { Pill("💬 只问问答(\(qas.count))", teal) }
+                    NavigationLink(value: Route.quiz(QuizSpec(items: fills, title: "第\(l.id)课 填空", review: false))) { Pill("✏ 只问填空(\(fills.count))", .blue) }
+                    NavigationLink(value: Route.quiz(QuizSpec(items: qas, title: "第\(l.id)课 问答", review: false))) { Pill("💬 只问问答(\(qas.count))", teal) }
                 }
                 ForEach(Array(l.items.enumerated()), id: \.element.id) { k, it in
-                    NavigationLink(value: QuizSpec(items: Array(l.items.dropFirst(k)), title: "第\(l.id)课", review: false)) {
+                    NavigationLink(value: Route.quiz(QuizSpec(items: Array(l.items.dropFirst(k)), title: "第\(l.id)课", review: false))) {
                         Card { Text((it.isFill ? "✏ 填空  " : "💬 问答  ") + it.q).foregroundColor(.primary).multilineTextAlignment(.leading) }
                     }
                 }
@@ -118,7 +126,7 @@ struct WrongView: View {
                 let list = store.wrongItems
                 if list.isEmpty { Text("还没有错题，继续加油！").font(.title3).padding(.top, 30) }
                 else {
-                    NavigationLink(value: QuizSpec(items: list.shuffled(), title: "错题重练", review: true)) { Pill("▶ 把错题全部练一遍（\(list.count)）", .red) }
+                    NavigationLink(value: Route.quiz(QuizSpec(items: list.shuffled(), title: "错题重练", review: true))) { Pill("▶ 把错题全部练一遍（\(list.count)）", .red) }
                     ForEach(list) { it in
                         Card {
                             Text("第\(it.lesson)课 · \(it.isFill ? "填空" : "问答") · 错 \(store.review[it.id]?["w"] ?? 0) 次 · 进度 \(store.review[it.id]?["st"] ?? 0)/6").font(.caption).foregroundColor(.gray)

@@ -150,7 +150,7 @@ struct QuizView: View {
                 if !wrongList.isEmpty { Text("没答好的已放进错题本，明天开始按遗忘曲线复习。").font(.footnote).foregroundColor(.gray) }
             }
             if !wrongList.isEmpty {
-                NavigationLink(value: QuizSpec(items: wrongList, title: "再练一遍", review: false)) { Pill("🔁 马上再练没答好的（\(wrongList.count)）", .red) }
+                NavigationLink(value: Route.quiz(QuizSpec(items: wrongList, title: "再练一遍", review: false))) { Pill("🔁 马上再练没答好的（\(wrongList.count)）", .red) }
                 ForEach(wrongList) { w in Text("• " + (w.isFill ? w.answerText : w.q + "\n   答：" + w.a)) }
             }
         }
