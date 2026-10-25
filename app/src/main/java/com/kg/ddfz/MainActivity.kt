@@ -267,14 +267,15 @@ class MainActivity : Activity() {
         if (list.isEmpty()) { body.addView(text("还没有错题，继续加油！", 18f), lp(20)); return@page }
         body.addView(button("▶ 把错题全部练一遍（${list.size}）", red) { startQuiz(list.shuffled(), "错题重练", true) }, lp())
         val m = rmap()
-        list.forEach { it ->
+        list.forEach { item ->
+            val it = item
             val o = m.getJSONObject(it.id)
             val c = card()
             c.addView(text("第${it.lesson}课 · " + (if (it.isFill) "填空" else "问答") + " · 错 ${o.optInt("w")} 次 · 复习进度 ${o.optInt("st")}/${curve.size}", 13f, Color.GRAY))
             c.addView(text(it.q, 16f, bold = true), lp(4))
             c.addView(text("答案：" + (if (it.isFill) it.blanks.joinToString("、") else it.a), 15f, green), lp(6))
             if (it.memory.isNotEmpty()) c.addView(text("🧠 " + it.memory, 14f, purple), lp(6))
-            c.setOnClickListener { speaker.speak(it.answerText) }
+            c.setOnClickListener { speaker.speak(item.answerText) }
             body.addView(c, lp(10))
         }
         body.addView(button("清空错题本", Color.GRAY) {
