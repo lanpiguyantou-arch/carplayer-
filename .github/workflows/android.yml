@@ -1,0 +1,35 @@
+name: Build DDFZ APK
+on:
+  push:
+    branches: [ddfz]
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: '8.9' }
+      - name: Build
+        run: |
+          cp content/bank.json app/src/main/assets/bank.json
+          gradle :app:assembleRelease --no-daemon 2>&1 | tee build.log
+          test ${PIPESTATUS[0]} -eq 0
+      - name: Publish
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk DDFZ6S.apk
+          gh release create "ddfz-android-${{ github.run_number }}" DDFZ6S.apk --target ddfz \
+            --title "道法问答六上 Android ${{ github.run_number }}" --notes "Android APK (phone + TV)"
+      - name: Report failure
+        if: failure()
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          touch build.log
+          { echo '```'; grep -E "^e: |error:|FAILED|What went wrong" -A3 build.log | head -80; echo '```'; } > err.md
+          gh issue create --title "DDFZ Android build failed: run ${{ github.run_number }}" --body-file err.md

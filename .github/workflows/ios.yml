@@ -1,0 +1,44 @@
+name: Build DDFZ IPA
+on:
+  push:
+    branches: [ddfz]
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Data
+        run: |
+          mkdir -p ios/Sources/Resources
+          cp content/bank.json ios/Sources/Resources/bank.json
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Build
+        run: |
+          set -o pipefail
+          cd ios
+          xcodegen generate
+          xcodebuild -project DDFZ.xcodeproj -target DDFZ -configuration Release -sdk iphoneos \
+            SYMROOT="$PWD/build" CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            build 2>&1 | tee ../build.log
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -R ios/build/Release-iphoneos/DDFZ.app Payload/
+          zip -qry DDFZ6S-unsigned.ipa Payload
+      - name: Publish
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          gh release create "ddfz-ios-${{ github.run_number }}" DDFZ6S-unsigned.ipa --target ddfz \
+            --title "道法问答六上 iOS ${{ github.run_number }}" --notes "Unsigned IPA. Sign before installing."
+      - name: Report failure
+        if: failure()
+        env: { GH_TOKEN: '${{ github.token }}' }
+        run: |
+          touch build.log
+          { echo '```'; grep -E "error:|BUILD FAILED" build.log | head -60 || true; echo '```'; } > err.md
+          gh issue create --title "DDFZ iOS build failed: run ${{ github.run_number }}" --body-file err.md
