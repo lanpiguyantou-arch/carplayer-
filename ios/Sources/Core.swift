@@ -13,6 +13,7 @@ struct Item: Identifiable, Hashable {
     let alt: [[String]]
     let a: String
     let keys: [String]
+    let syn: [[String]]
     let memory: String
     let diagram: String
     var isFill: Bool { type == "fill" }
@@ -39,7 +40,7 @@ enum Bank {
                 Item(id: "\(lid)-\(k)", lesson: lid, lessonTitle: title, type: it["type"] as? String ?? "qa",
                      q: it["q"] as? String ?? "", blanks: it["blanks"] as? [String] ?? [],
                      alt: it["alt"] as? [[String]] ?? [], a: it["a"] as? String ?? "",
-                     keys: it["keys"] as? [String] ?? [], memory: it["memory"] as? String ?? "",
+                     keys: it["keys"] as? [String] ?? [], syn: it["syn"] as? [[String]] ?? [], memory: it["memory"] as? String ?? "",
                      diagram: it["diagram"] as? String ?? "")
             }
             return LessonData(id: lid, title: title, items: items)
@@ -280,5 +281,6 @@ enum Judge {
         for c in t { if let i = s.indices.first(where: { !used[$0] && s[$0] == c }) { used[i] = true; m += 1 } }
         return Double(m) >= (Double(t.count) * 0.75).rounded(.up)
     }
+    static func key(_ said: String, _ it: Item, _ i: Int) -> Bool { hit(said, it.keys[i]) || (i < it.syn.count ? it.syn[i] : []).contains { hit(said, $0) } }
     static func fill(_ said: String, _ blank: String, _ alts: [String]) -> Bool { hit(said, blank) || alts.contains { hit(said, $0) } }
 }
