@@ -289,7 +289,7 @@ class MainActivity : Activity() {
     // 给所有可操作控件加上焦点（遥控器方向键）和焦点高亮；大屏时放大字号
     private fun decorate(v: View) {
         if (v is ViewGroup) {
-            if (tvLike && v !is ScrollView) v.clipChildren = false
+            if (tvLike && v !is ScrollView && v !== curRoot) v.clipChildren = false
             for (i in 0 until v.childCount) decorate(v.getChildAt(i))
         }
         if (isBig && v is TextView && !scaled.contains(v)) {
@@ -322,6 +322,7 @@ class MainActivity : Activity() {
         if (new != null && decorated.contains(new) && !new.isInTouchMode && new !is EditText) {
             val s = if (new.width > dp(480)) 1.02f else 1.06f
             new.animate().scaleX(s).scaleY(s).setDuration(120).start()
+            new.post { if (new.isAttachedToWindow) scrollToFocus(new) }
         }
         if (old != null) {
             val body = curBody
@@ -342,13 +343,48 @@ class MainActivity : Activity() {
 
     private fun addGrid(body: LinearLayout, cards: List<View>, cols: Int, top: Int) {
         cards.chunked(cols).forEach { chunk ->
-            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            val row = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL; isBaselineAligned = false }
             chunk.forEachIndexed { k, c ->
-                row.addView(c, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f).apply { if (k > 0) leftMargin = dp(14) })
+                c.minimumHeight = dp(96)
+                row.addView(c, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { if (k > 0) leftMargin = dp(14) })
             }
-            repeat(cols - chunk.size) { row.addView(View(this), LinearLayout.LayoutParams(0, 1, 1f).apply { leftMargin = dp(14) }) }
+            repeat(cols - chunk.size) { row.addView(View(this).apply { visibility = View.INVISIBLE; isFocusable = false }, LinearLayout.LayoutParams(0, dp(96), 1f).apply { leftMargin = dp(14) }) }
             body.addView(row, lp(top = top))
         }
+    }
+
+    // 焦点移动时，让当前选中的卡片滚到屏幕中间（电视上下面的单元/功能也能选到）
+    private fun scrollToFocus(v: View) {
+        var sv: ScrollView? = null
+        var p: Any? = v.parent
+        while (p is View) { if (p is ScrollView) { sv = p; break }; p = p.parent }
+        val scroll = sv ?: return
+        val content = scroll.getChildAt(0) ?: return
+        var y = 0; var c: View = v
+        while (c !== content) { y += c.top; c = (c.parent as? View) ?: return }
+        val target = y + v.height / 2 - scroll.height / 2
+        scroll.smoothScrollTo(0, maxOf(0, minOf(target, content.height - scroll.height)))
+    }
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN && (event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN || event.keyCode == KeyEvent.KEYCODE_DPAD_UP)) {
+            val cf = currentFocus
+            val body = curBody
+            if (cf != null && body != null && isInside(cf, body) && cf !is SeekBar) {
+                val dir = if (event.keyCode == KeyEvent.KEYCODE_DPAD_DOWN) View.FOCUS_DOWN else View.FOCUS_UP
+                val nx = cf.focusSearch(dir)
+                if (nx == null || !isInside(nx, window.decorView)) {
+                    // 找不到下一个就先滚一屏，再找
+                    val sv = body.parent as? ScrollView
+                    if (sv != null) {
+                        sv.smoothScrollBy(0, if (dir == View.FOCUS_DOWN) sv.height / 2 else -sv.height / 2)
+                        sv.postDelayed({ currentFocus?.focusSearch(dir)?.requestFocus() }, 250)
+                        return true
+                    }
+                }
+            }
+        }
+        return super.dispatchKeyEvent(event)
     }
 
     // ---------- UI helpers
