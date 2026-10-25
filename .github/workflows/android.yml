@@ -17,7 +17,7 @@ jobs:
         with: { gradle-version: '8.9' }
       - name: Build
         run: |
-          cp content/bank.json app/src/main/assets/bank.json
+          mkdir -p app/src/main/assets && cp content/bank.json app/src/main/assets/bank.json
           gradle :app:assembleRelease --no-daemon 2>&1 | tee build.log
           test ${PIPESTATUS[0]} -eq 0
       - name: Publish
