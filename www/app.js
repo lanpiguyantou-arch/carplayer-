@@ -293,3 +293,4 @@ function wrongHome(){
 const roots = { home:homeView, dict:dictHome, recite:reciteHome, essay:essayHome, wrong:wrongHome };
 App.tab('home');
 })();
+// v5 课文+解析
