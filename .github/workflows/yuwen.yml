@@ -35,7 +35,7 @@ jobs:
           { echo '```'; grep -E "^e: |error:|FAILED|What went wrong" -A3 build.log | head -80; echo '```'; } > err.md
           gh issue create --title "Yuwen Android build failed: run ${{ github.run_number }}" --body-file err.md
   ios:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       - name: Data
