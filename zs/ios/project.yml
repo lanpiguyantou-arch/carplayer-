@@ -1,0 +1,30 @@
+name: YibiaoZS
+options:
+  bundleIdPrefix: com.lanpiguyantou
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  YibiaoZS:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+        excludes:
+          - Info.plist
+          - www
+      - path: Sources/www
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lanpiguyantou.yibiaozs
+        PRODUCT_NAME: YibiaoZS
+        SWIFT_VERSION: "5.0"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Sources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGNING_REQUIRED: NO
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
