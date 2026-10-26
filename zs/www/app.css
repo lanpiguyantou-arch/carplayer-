@@ -1,0 +1,54 @@
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#eef1f5;font:15px/1.55 -apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;color:#1d2733}
+#hd{position:fixed;top:0;left:0;right:0;z-index:10;background:#0e4c7a;color:#fff;display:flex;align-items:center;padding:env(safe-area-inset-top) 6px 0;height:calc(50px + env(safe-area-inset-top))}
+#hd h1{flex:1;font-size:18px;margin:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hd button{background:none;border:0;color:#fff;font-size:26px;width:44px;height:44px}
+#hsearch{font-size:19px!important}
+#main{padding:calc(58px + env(safe-area-inset-top)) 12px calc(76px + env(safe-area-inset-bottom));min-height:100%}
+#tab{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid #d6dbe2;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+#tab a{flex:1;text-align:center;font-size:12px;color:#66727f;padding:6px 0 5px}
+#tab a i{display:block;font-style:normal;font-size:20px;line-height:24px}
+#tab a.on{color:#0e4c7a;font-weight:600}
+.card{background:#fff;border-radius:12px;padding:12px 14px;margin:0 0 12px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card h3{margin:0 0 8px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gi{background:#fff;border-radius:12px;padding:14px 4px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06);font-size:13px}
+.gi b{display:block;font-size:26px;line-height:34px}
+.stat{display:flex;gap:8px}
+.stat div{flex:1;border-radius:10px;padding:8px;text-align:center;color:#fff}
+.stat b{display:block;font-size:24px}
+.red{background:#d64541}.org{background:#e88a1a}.yel{background:#c9a400}.grn{background:#2e9d5b}.blu{background:#2f6fb0}
+input,select,textarea{font:inherit;padding:9px 10px;border:1px solid #c9d1db;border-radius:8px;width:100%;background:#fff;color:#1d2733}
+.row{display:flex;gap:8px;align-items:center;margin:6px 0}
+.row>*{flex:1}
+.row label{flex:0 0 96px;color:#55616e;font-size:14px}
+button.b{background:#0e4c7a;color:#fff;border:0;border-radius:8px;padding:10px 14px;font:inherit}
+button.b2{background:#e3e9f0;color:#0e4c7a;border:0;border-radius:8px;padding:10px 14px;font:inherit}
+button.bd{background:#d64541;color:#fff;border:0;border-radius:8px;padding:10px 14px;font:inherit}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;margin-bottom:4px}
+.chips span{flex:0 0 auto;padding:5px 11px;border-radius:16px;background:#fff;border:1px solid #cfd7e0;font-size:13px;white-space:nowrap}
+.chips span.on{background:#0e4c7a;color:#fff;border-color:#0e4c7a}
+.li{background:#fff;border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;gap:10px;align-items:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.li .m{flex:1;min-width:0}
+.li .m b{font-size:15px}
+.li .m div{font-size:13px;color:#5f6b78;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{font-size:12px;border-radius:6px;padding:2px 7px;color:#fff;white-space:nowrap}
+.muted{color:#6c7783;font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}
+td,th{border:1px solid #d4dae2;padding:5px 6px;vertical-align:top}
+th{background:#eef2f7}
+.art{background:#fff;border-radius:12px;padding:12px 14px;overflow-x:auto}
+.art h2{font-size:18px;margin:0 0 8px}
+.art ul,.art ol{padding-left:20px}
+.tip{background:#fff7e0;border-left:3px solid #e8a81a;padding:6px 10px;font-size:13px}
+mark{background:#ffe066;padding:0 1px}
+.res{font-size:16px;font-weight:600;color:#0e4c7a;margin:8px 0}
+.viewer{background:#222;border-radius:10px;overflow:auto;-webkit-overflow-scrolling:touch;max-height:62vh}
+.viewer img{display:block;width:100%}
+.pager{display:flex;gap:8px;align-items:center;margin:8px 0}
+.pager .pn{flex:1;text-align:center;font-weight:600}
+#toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:8px 16px;border-radius:18px;display:none;z-index:20;font-size:14px}
+.sec{font-size:13px;color:#6c7783;margin:14px 2px 6px;font-weight:600}
+.kv{display:grid;grid-template-columns:90px 1fr;gap:4px 8px;font-size:14px}
+.kv span:nth-child(odd){color:#6c7783}
+.ok{color:#2e9d5b;font-weight:600}.ng{color:#d64541;font-weight:600}
