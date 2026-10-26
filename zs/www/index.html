@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>仪表助手</title>
+<link rel="stylesheet" href="app.css">
+</head><body>
+<header id="hd"><button id="back" onclick="App.back()" style="visibility:hidden">‹</button><h1 id="title">仪表助手</h1><button id="hsearch" onclick="App.go('search')">🔍</button></header>
+<main id="main"></main>
+<nav id="tab">
+<a data-t="home" onclick="App.tab('home')"><i>🏠</i>首页</a>
+<a data-t="ledger" onclick="App.tab('ledger')"><i>📋</i>台账</a>
+<a data-t="tools" onclick="App.tab('tools')"><i>🧮</i>计算</a>
+<a data-t="sis" onclick="App.tab('sis')"><i>🛡️</i>SIS</a>
+<a data-t="kb" onclick="App.tab('kb')"><i>📚</i>资料</a>
+</nav>
+<div id="toast"></div>
+<script src="ledger.js"></script>
+<script src="tc.js"></script>
+<script src="kb.js"></script>
+<script src="sis.js"></script>
+<script src="docs.js"></script>
+<script src="app.js"></script>
+</body></html>
