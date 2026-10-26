@@ -102,9 +102,25 @@ function poemCard(p){
   ${p.zhu&&p.zhu.length?`<h4>注释</h4><ol>${p.zhu.map(z=>`<li>${esc(z)}</li>`).join('')}</ol>`:''}
   ${p.yi?`<h4>译文</h4><div class="prose">${paras(p.yi)}</div>`:''}</div>`;
 }
+function jxView(j){
+  const sec=(t,b)=>b?`<div class="card"><h4>${t}</h4>${b}</div>`:'';
+  const li=a=>a&&a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
+  let s='';
+  if(j.zhuzhi) s+=`<div class="card jx-main"><h4>📌 中心思想</h4><div class="prose">${esc(j.zhuzhi)}</div>${spkBtn(j.zhuzhi)}</div>`;
+  s+=sec('✍️ 作者与背景',(j.zuozhe?`<p>${esc(j.zuozhe)}</p>`:'')+(j.beijing?`<p>${esc(j.beijing)}</p>`:''));
+  (j.poems||[]).forEach(p=>{s+=sec(`📜 ${esc(p.title)}${p.author?' · '+esc(p.author):''}`,(p.shiyi?`<p><b>诗意：</b>${esc(p.shiyi)}</p>`:'')+(p.shangxi?`<p><b>赏析：</b>${esc(p.shangxi)}</p>`:'')+(p.qinggan?`<p><b>情感：</b>${esc(p.qinggan)}</p>`:''));});
+  if(j.jiegou&&j.jiegou.length) s+=sec('🧩 课文结构',`<ol class="jx-st">${j.jiegou.map(x=>`<li><b>${esc(x.duan)}</b>：${esc(x.yi)}</li>`).join('')}</ol>`);
+  if(j.zhongdian&&j.zhongdian.length) s+=sec('🔍 重点句赏析',j.zhongdian.map(x=>`<div class="jx-ju">“${esc(x.ju)}”</div><div class="jx-xi">${esc(x.xi)}</div>`).join(''));
+  s+=sec('🎨 写作手法',li(j.xiefa));
+  if(j.kehou&&j.kehou.length) s+=sec('❓ 课后题思路',j.kehou.map((x,i)=>`<details class="jx-q"><summary>${i+1}. ${esc(x.q)}</summary><div>${esc(x.a).replace(/\n/g,'<br>')}</div></details>`).join(''));
+  s+=sec('⚠️ 易考点',li(j.kaodian));
+  return s;
+}
 function lessonView(u,l){
   const parts = [];
-  if (l.poems && l.poems.length) parts.push(['原文', () => l.poems.map(poemCard).join('')]);
+  if (l.jx && l.jx.kewen) parts.push(['课文', () => `<div class="card kewen">${spkBtn(l.jx.kewen)}<div class="prose">${paras(l.jx.kewen)}</div></div>`]);
+  if (l.jx) parts.push(['解析', () => jxView(l.jx)]);
+  if (l.poems && l.poems.length) parts.push([l.jx&&l.jx.kewen?'注释译文':'原文', () => l.poems.map(poemCard).join('')]);
   if (l.chars && l.chars.length) parts.push(['生字', () => l.chars.map(charCard).join('')]);
   if (l.words && l.words.length) parts.push(['词语', () => l.words.map(wordCard).join('')]);
   if (l.recite) parts.push(['背诵', () => `<div class="card"><h4>${esc(l.recite.req)}</h4><div class="prose">${paras(l.recite.text)}</div><button class="btn" onclick="${on(()=>push(reciteView({title:l.title,req:l.recite.req,text:l.recite.text})))}">开始背诵练习</button> ${spkBtn(l.recite.text)}</div>`]);
