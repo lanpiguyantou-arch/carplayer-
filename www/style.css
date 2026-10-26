@@ -37,3 +37,11 @@ nav button.on{color:#b8322a;font-weight:600}
 ol,ul{padding-left:22px;line-height:1.8;margin:6px 0}
 h4{margin:6px 0 8px;color:#b8322a}
 .spk{border:0;background:#f3e5d4;border-radius:50%;width:34px;height:34px;font-size:16px}
+
+.jx-main{border-left:4px solid #b8322a}
+.jx-ju{background:#faf5ec;border-radius:8px;padding:8px 10px;margin:8px 0 4px;font-size:16px}
+.jx-xi{color:#5a5047;font-size:15px;line-height:1.6;margin-bottom:6px}
+.jx-st li{margin:4px 0;line-height:1.6}
+.jx-q{border-top:1px solid #eee;padding:8px 0}.jx-q summary{font-weight:600;line-height:1.5}
+.jx-q div{margin-top:6px;color:#4a4038;line-height:1.6}
+.kewen .prose p{text-indent:2em;line-height:1.9;font-size:17px}
